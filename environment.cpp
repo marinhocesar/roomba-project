@@ -6,6 +6,7 @@
 
 int** createMatrix(int rows, int cols)
 {
+    // Allocates memory for a matrix
     int** matrix = new int*[rows];
     for(int i = 0; i < rows; i++){
         matrix[i] = new int[cols];
@@ -13,24 +14,15 @@ int** createMatrix(int rows, int cols)
     return matrix;
 }
 
-void fillMatrix(int** matrix, int rows, int cols){
+void fillMatrix(int** matrix, int rows, int cols)
+{
+    // Fills the matrix with zeros.
     int counter = 1;
     for (int i = 0; i < rows; i++){
         for (int j = 0; j < cols; j++){
             matrix[i][j] = 0;
             counter++;
         }
-    }
-}
-
-void printMatrix(int** matrix, int rows, int cols){
-    for (int i = 0; i < rows; i++){
-        std::cout << "| ";
-        for (int j = 0; j < cols; j++){
-            std::cout << matrix[i][j];
-            if(j != cols-1){ std::cout << " "; }
-        }
-        std::cout << " |" << std::endl;
     }
 }
 
@@ -42,6 +34,9 @@ public:
     Environment();
     Environment(int, int);
     Environment(std::string);
+    add_obstacle(int, int);
+    add_obstacle(int, int, int, int);
+    friend std::ostream& operator<<(std::ostream&, const Environment&);
 };
 
 Environment::Environment()
@@ -82,15 +77,46 @@ Environment::Environment(std::string filename)
     fillMatrix(grid, width, height);
 }
 
+Environment::add_obstacle(int i, int j)
+{
+    grid[i][j] = 1;
+}
+
+Environment::add_obstacle(int x_start, int x_finish, int y_start, int y_finish)
+{
+    // Adds a rectangular obstacle to the environment matrix
+    for(int i = x_start; i < x_finish; i++)
+    {
+        for(int j = y_start; j < y_finish; j++){
+            grid[i][j] = 1;
+        }
+    }
+}
+
+std::ostream& operator << (std::ostream& os, const Environment& env)
+{
+    // Overcharging of the << operator
+    for (int i = 0; i < env.width; i++){
+        os << "| ";
+        for (int j = 0; j < env.height; j++){
+            os << env.grid[i][j];
+            if(j != env.height-1){ os << " "; }
+        }
+        os << " |" << std::endl;
+    }
+    return os;
+}
+
 int main()
 {
     Environment grade;
     Environment grade_b (5,5);
     Environment grade_f ("./grid_dimensions.txt");
 
-    printMatrix(grade.grid, grade.width, grade.height);
-    std::cout << std::endl;
-    printMatrix(grade_b.grid, grade_b.width, grade_b.height);
-    std::cout << std::endl;
-    printMatrix(grade_f.grid, grade_f.width, grade_f.height);
+    std::cout << grade << std::endl;
+    grade.add_obstacle(0, 0);
+    std::cout << grade << std::endl;
+    grade.add_obstacle(0,2,2,4);
+    std::cout << grade << std::endl;
+    
 }
