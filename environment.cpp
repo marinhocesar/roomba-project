@@ -1,8 +1,30 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <tuple>
 
 //using namespace std;
+
+
+int* getCoordinates(std::string s, std::string separator = " ")
+{
+    int * coord;
+    coord = new int [2];
+    int i = 0;
+    int start = 0;
+    int end = s.find(separator);
+    while (i<2)
+    {
+        std::string coord_str;
+        coord_str = s.substr(start, end - start);
+        coord[i] = std::stoi(coord_str);
+        start = end + separator.size();
+        end = s.find(separator, start);
+        i++;
+    }
+    
+    return coord;
+}
 
 int** createMatrix(int rows, int cols)
 {
@@ -36,6 +58,8 @@ public:
     Environment(std::string);
     add_obstacle(int, int);
     add_obstacle(int, int, int, int);
+    add_obstacle(std::string);
+    save_to_file(std::string);
     friend std::ostream& operator<<(std::ostream&, const Environment&);
 };
 
@@ -62,11 +86,10 @@ Environment::Environment(std::string filename)
     if(f.is_open())
     {
         int temp[2];
-        int i = 0;
         for(int i = 0; i < 2; i++)
         {
             getline(f, file_info, ' ');
-            temp[i] = stoi(file_info);
+            temp[i] = std::stoi(file_info);
         }
         width = temp[0];
         height = temp[1];
@@ -93,6 +116,44 @@ Environment::add_obstacle(int x_start, int x_finish, int y_start, int y_finish)
     }
 }
 
+Environment::add_obstacle(std::string filename)
+{
+    std::string file_info;
+    std::ifstream f(filename);
+    if(f.is_open())
+    {
+        while (getline(f, file_info, '\n'))
+        {
+            int* coord = getCoordinates(file_info);
+            std::cout << coord[0] << " " << coord[1] << std::endl;
+            add_obstacle(coord[0], coord[1]);
+        }
+        
+        f.close();
+    
+    }
+}
+
+Environment::save_to_file(std::string filename)
+{
+    filename += ".txt";
+    std::ofstream f(filename);
+    if(f.is_open())
+    {
+        // ASK THE TEACHER IF THERE IS A WAY TO USE THE
+        // OVERCHARGED << OPERATOR
+        for (int i = 0; i < width; i++){
+        f << "| ";
+        for (int j = 0; j < height; j++){
+            f << grid[i][j];
+            if(j != height-1){ f << " "; }
+        }
+        f << " |" << std::endl;
+    }
+        f.close();
+    }
+}
+
 std::ostream& operator << (std::ostream& os, const Environment& env)
 {
     // Overcharging of the << operator
@@ -114,9 +175,11 @@ int main()
     Environment grade_f ("./grid_dimensions.txt");
 
     std::cout << grade << std::endl;
-    grade.add_obstacle(0, 0);
+    //grade.add_obstacle(0, 0);
+    //std::cout << grade << std::endl;
+    //grade.add_obstacle(0,2,2,4);
+    //std::cout << grade << std::endl;
+    //grade.save_to_file("teste");
+    //grade.add_obstacle("obstacles.txt");
     std::cout << grade << std::endl;
-    grade.add_obstacle(0,2,2,4);
-    std::cout << grade << std::endl;
-    
 }
