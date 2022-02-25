@@ -52,6 +52,7 @@ class Environment
 {
 public:
     int width, height;
+    int x_charger = 0, y_charger = 0;
     int** grid;
     Environment();
     Environment(int, int);
@@ -99,6 +100,13 @@ Environment::Environment(std::string filename)
         width = temp[0];
         height = temp[1];
         f.close();
+    }
+    if(width < 1 || height < 1){
+        std::cout << "Invalid arguments found in the file." << std::endl;
+        std::cout << "Initialization will occour with default values." << std::endl;
+        
+        width = 8;
+        height = 8;
     }
     
     grid = createMatrix(width, height);
@@ -180,6 +188,8 @@ Environment::save_to_file(std::string filename)
 
         // ASK THE PROFESSOR IF THERE IS A WAY TO USE THE OVERLOADED << OPERATOR
         
+        // std::cout << room << std::endl;
+        
         // Writes the matrix that represents the environment into the file.
         for (int i = 0; i < width; i++){
         f << "| ";
@@ -191,6 +201,7 @@ Environment::save_to_file(std::string filename)
         }
         f.close();
     }
+
 }
 
 /* ===========================Operator Overload============================== */
@@ -211,7 +222,7 @@ std::ostream& operator << (std::ostream& os, const Environment& env)
 
 //
 
-Environment customInitialization()
+void customInitialization(Environment* p_room)
 {
     int width = 0, height = 0;
     std::cout << "\nCustom Initialization" << std::endl;
@@ -224,15 +235,14 @@ Environment customInitialization()
     if(width < 1 || height < 1){
         std::cout << "Invalid arguments." << std::endl;
         std::cout << "Initialization will occour with default values." << std::endl;
-        Environment room = Environment();
-        return room;
+        *p_room = Environment();
+        // return room;
     }
 
-    Environment room(width, height);
-    return room;
+    *p_room = Environment(width, height);
 }
 
-Environment fileInitialization()
+void fileInitialization(Environment* p_room)
 {
     std::string filename = "" ;
     std::cout << "\nFile Initialization" << std::endl;
@@ -240,9 +250,8 @@ Environment fileInitialization()
     std::cin.ignore();
     std::getline(std::cin, filename);
     if(filename == ""){ filename = "grid_dimensions.txt"; }
-    Environment room = Environment(filename);
+    *p_room = Environment(filename);
 
-    return room;
 }
 
 void saveMenu(Environment* room)
@@ -335,16 +344,16 @@ int main()
         }
         
         Environment room;
-
+        Environment* p_room = &room;
         if(answer == 1)
         {
             Environment room = Environment();
         }else if(answer == 2)
         {
-            room = customInitialization();
+            customInitialization(p_room);
         }else
         {
-            room = fileInitialization();
+            fileInitialization(p_room);
         }
         
         std::cout << room << std::endl;
