@@ -2,6 +2,50 @@
 #include <fstream>
 #include <string.h>
 
+/* ============================Auxiliary Functions=========================== */
+
+int* getCoordinates(std::string s, std::string separator = " ")
+{
+    // Function that recieves a string and subdivides into 2 integers using a
+    // separator.
+    int * coord = new int [2]; // Pointer as a way to return multiple values.
+    int start = 0; // Index of 's' string start.
+    int end = s.find(separator); // Index of the first separator.
+    
+    std::string coord_str;
+    coord_str = s.substr(start, end - start);
+    coord[0] = std::stoi(coord_str); // First coordinate.
+    // Updates 'start' and 'end' to correspond to the second number.
+    start = end + separator.size();
+    end = s.length();
+    coord_str = s.substr(start, end - start);
+    coord[1] = std::stoi(coord_str); // Second coordinate.
+
+    return coord;
+}
+
+int** createMatrix(int rows, int cols)
+{
+    // Allocates memory for a matrix.
+    int** matrix = new int*[rows];
+    for(int i = 0; i < rows; i++){
+        matrix[i] = new int[cols];
+    }
+    return matrix;
+}
+
+void fillMatrix(int** matrix, int rows, int cols)
+{
+    // Fills the matrix with zeros.
+    int counter = 1;
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            matrix[i][j] = 0;
+            counter++;
+        }
+    }
+}
+
 /* ==============================Class======================================= */
 
 class Environment
@@ -165,6 +209,8 @@ std::ostream& operator << (std::ostream& os, const Environment& env)
     return os;
 }
 
+//
+
 Environment customInitialization()
 {
     int width = 0, height = 0;
@@ -197,50 +243,6 @@ Environment fileInitialization()
     Environment room = Environment(filename);
 
     return room;
-}
-
-/* ============================Auxiliary Functions=========================== */
-
-int* getCoordinates(std::string s, std::string separator = " ")
-{
-    // Function that recieves a string and subdivides into 2 integers using a
-    // separator.
-    int * coord = new int [2]; // Pointer as a way to return multiple values.
-    int start = 0; // Index of 's' string start.
-    int end = s.find(separator); // Index of the first separator.
-    
-    std::string coord_str;
-    coord_str = s.substr(start, end - start);
-    coord[0] = std::stoi(coord_str); // First coordinate.
-    // Updates 'start' and 'end' to correspond to the second number.
-    start = end + separator.size();
-    end = s.length();
-    coord_str = s.substr(start, end - start);
-    coord[1] = std::stoi(coord_str); // Second coordinate.
-
-    return coord;
-}
-
-int** createMatrix(int rows, int cols)
-{
-    // Allocates memory for a matrix.
-    int** matrix = new int*[rows];
-    for(int i = 0; i < rows; i++){
-        matrix[i] = new int[cols];
-    }
-    return matrix;
-}
-
-void fillMatrix(int** matrix, int rows, int cols)
-{
-    // Fills the matrix with zeros.
-    int counter = 1;
-    for (int i = 0; i < rows; i++){
-        for (int j = 0; j < cols; j++){
-            matrix[i][j] = 0;
-            counter++;
-        }
-    }
 }
 
 void saveMenu(Environment* room)
@@ -309,6 +311,7 @@ void obstaclesMenu(Environment* room)
             std::cout << "Enter the filename: ";
             std::cin.ignore();
             std::getline(std::cin, filename);
+            std::cout << filename << std::endl;
             if(filename == ""){ filename = "obstacles.txt"; }
             (*room).add_obstacle(filename);
             std::cout << (*room) << std::endl;
@@ -380,6 +383,3 @@ int main()
 
     return 0;
 }
-
-
-
