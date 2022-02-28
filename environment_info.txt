@@ -1,0 +1,57 @@
+width= 32
+height= 7
+charging_station_x= 1
+charging_station_y= 1
+obstacle= 2, 12
+obstacle= 3, 12
+obstacle= 4, 12
+obstacle= 5, 12
+obstacle= 6, 12
+obstacle= 2, 13
+obstacle= 3, 13
+obstacle= 4, 13
+obstacle= 5, 13
+obstacle= 6, 13
+obstacle= 2, 14
+obstacle= 3, 14
+obstacle= 4, 14
+obstacle= 5, 14
+obstacle= 6, 14
+obstacle= 2, 15
+obstacle= 3, 15
+obstacle= 4, 15
+obstacle= 5, 15
+obstacle= 6, 15
+obstacle= 2, 16
+obstacle= 3, 16
+obstacle= 4, 16
+obstacle= 5, 16
+obstacle= 6, 16
+obstacle= 2, 17
+obstacle= 3, 17
+obstacle= 4, 17
+obstacle= 5, 17
+obstacle= 6, 17
+obstacle= 2, 18
+obstacle= 3, 18
+obstacle= 4, 18
+obstacle= 5, 18
+obstacle= 6, 18
+obstacle= 2, 19
+obstacle= 3, 19
+obstacle= 4, 19
+obstacle= 5, 19
+obstacle= 6, 19
+obstacle= 2, 20
+obstacle= 3, 20
+obstacle= 4, 20
+obstacle= 5, 20
+obstacle= 6, 20
+$
+| 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 |
