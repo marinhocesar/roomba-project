@@ -215,7 +215,7 @@ void Environment::add_obstacle(std::string filename)
 void Environment::set_charging_station(int i, int j)
 {
     // Adds an charging station to the matrix representation of the Environment instance.
-    if (i < 1 || i > height || j < 1 || i > width)
+    if (i < 1 || i > width || j < 1 || i > height)
     {
         std::cout << "One or more arguments provided are invalid." << std::endl;
         return;
