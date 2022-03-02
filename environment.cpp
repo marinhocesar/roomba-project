@@ -144,20 +144,20 @@ void Environment::add_obstacle(int i, int j)
     {
         return;
     }
-    if (i < 1 || i > height || j < 1 || i > width)
+    if (i < 1 || i > width || j < 1 || j > height)
     {
         std::cout << "One or more arguments provided are invalid." << std::endl;
         return;
     }
-    grid[i - 1][j - 1] = 1;
+    grid[j - 1][i - 1] = 1;
 }
 
 void Environment::add_obstacle(int x_start, int y_start, int x_finish, int y_finish)
 {
     // Adds a rectangle to the matrix representation of the Environment instance.
-    for (int i = y_start; i <= y_finish; i++)
+    for (int j = y_start; j <= y_finish; j++)
     {
-        for (int j = x_start; j <= x_finish; j++)
+        for (int i = x_start; i <= x_finish; i++)
         {
             add_obstacle(i, j);
         }
@@ -183,6 +183,7 @@ void Environment::add_obstacle(std::string filename)
             if (file_info.find("obstacle") != std::string::npos)
             {
                 int *coord = getCoordinates(file_info_number);
+                
                 add_obstacle(coord[0], coord[1]);
             }
         }
@@ -194,15 +195,15 @@ void Environment::add_obstacle(std::string filename)
 void Environment::set_charging_station(int i, int j)
 {
     // Adds an charging station to the matrix representation of the Environment instance.
-    if (i < 1 || i > width || j < 1 || i > height)
+    if (i < 1 || i > width || j < 1 || j > height)
     {
         std::cout << "One or more arguments provided are invalid." << std::endl;
         return;
     }
-    grid[charging_station_x - 1][charging_station_y - 1] = 0;
+    grid[charging_station_y - 1][charging_station_x - 1] = 0;
     charging_station_x = i;
     charging_station_y = j;
-    grid[i - 1][j - 1] = 4;
+    grid[j - 1][i - 1] = 4;
 }
 
 void Environment::save_to_file(std::string filename)
@@ -234,7 +235,7 @@ void Environment::save_to_file(std::string filename)
                 }
                 else
                 {
-                    f << "obstacle= " << j + 1 << ", " << i + 1 << "\n";
+                    f << "obstacle= " << i + 1 << ", " << j + 1 << "\n";
                 }
             }
         }
@@ -436,4 +437,3 @@ void obstaclesMenu(Environment *room)
         }
     }
 }
-
