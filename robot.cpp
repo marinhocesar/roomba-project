@@ -2,26 +2,76 @@
 #include <fstream>
 #include <string.h>
 
-/* ==============================Class======================================= */
+/* =====================Battery Class======================================= */
+
+class Battery
+{
+
+    int max_battery = 100;
+    int current_battery = 100;
+
+public:
+    Battery();
+    Battery(int);
+    void discharge();
+    void charge();
+    void show_battery();
+};
+
+Battery::Battery()
+{
+}
+
+Battery::Battery(int max_capacity)
+{
+    max_battery = max_capacity;
+    current_battery = max_capacity;
+}
+
+void Battery::discharge()
+{
+    --current_battery;
+}
+
+void Battery::charge()
+{
+    ++current_battery;
+}
+
+void Battery::show_battery()
+{
+    std::cout << current_battery << std::endl;
+}
+
+/* ======================Robot Class======================================= */
 
 class Robot
 {
 public:
     std::string name = "robot";
     int x_pos = 0, y_pos = 0;
-    int max_battery = 100;
+    Battery battery;
     bool has_charge = true;
+    Robot();
     Robot(std::string, int, int, int);
     Robot(std::string);
     void stop_robot();
 };
 
-Robot::Robot(std::string name, int x, int y, int battery)
+Robot::Robot()
+{
+    // Constructor without user input
+    x_pos = 0;
+    y_pos = 0;
+    battery = Battery();
+}
+
+Robot::Robot(std::string name, int x, int y, int capacity)
 {
     // Constructor with user input
     x_pos = x;
     y_pos = y;
-    max_battery = battery;
+    battery = Battery(capacity);
 
 }
 
@@ -30,6 +80,7 @@ Robot::Robot(std::string filename)
     // Constructor with file info
     std::string file_info;
     std::ifstream f(filename); // Opens the file in input mode.
+    int capacity = 100;
     if (f.is_open())
     {
         while (getline(f, file_info))
@@ -61,7 +112,7 @@ Robot::Robot(std::string filename)
             }
             if (file_info.find("battery") != std::string::npos)
             {
-                max_battery = std::stoi(file_info_att);
+                capacity = std::stoi(file_info_att);
 
                 continue;
             }
@@ -69,13 +120,28 @@ Robot::Robot(std::string filename)
 
         f.close();
     }
+    battery = Battery(capacity);
 
 }
 
-/* ===========================Class Methods================================== */
+/* ===========================Class Methods================================ */
 
 void Robot::stop_robot()
 {
     // Stops the robot
     has_charge = false;
+}
+
+
+/* ======================================================================== */
+
+int main()
+{
+    Robot bob = Robot();
+    bob.battery.show_battery();
+    bob.battery.discharge();
+    bob.battery.show_battery();
+    bob.battery.discharge();
+    bob.battery.show_battery();
+    return 0;
 }
