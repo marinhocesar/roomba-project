@@ -4,10 +4,10 @@
 
 class Bumper
 {
+    Environment* current_envo;
 public:
     Bumper();
     Bumper(Environment*);
-    Environment* current_envo;
     bool calc_collision(int, int);
 };
 
@@ -48,20 +48,22 @@ bool Bumper::calc_collision(int x, int y)
 class Battery
 {
 
-    int max_battery = 100;
-    int current_battery = 100;
+    int max_battery;
+    int current_battery;
 
 public:
     Battery();
     Battery(int);
     void discharge();
     void charge();
-    int battery_level();
+    int get_battery_level();
     void show_battery();
 };
 
 Battery::Battery()
 {
+    max_battery = 100;
+    current_battery = 100;
 }
 
 Battery::Battery(int max_capacity)
@@ -80,30 +82,27 @@ void Battery::charge()
     ++current_battery;
 }
 
-int Battery::battery_level()
+int Battery::get_battery_level()
 {
     return current_battery;
-}
-
-void Battery::show_battery()
-{
-    std::cout << current_battery << std::endl;
 }
 
 /* ======================Robot Class======================================= */
 
 class Robot
 {
-public:
+protected:
     Environment* current_envo;
     std::string name = "robot";
     int x_pos = 0, y_pos = 0;
     Battery battery;
-    bool has_charge = true;
+public:
     Robot();
     Robot(std::string, int, int, int, Environment*);
     Robot(std::string, Environment*);
-    void stop_robot();
+    bool stop_robot();
+    void show_battery();
+    bool has_charge();
 };
 
 // Robot::Robot()
@@ -116,7 +115,7 @@ public:
 //     current_envo = &envo;
 // }
 
-Robot::Robot(std::string name, int x, int y, int capacity, Environment* p_a)
+Robot::Robot(std::string robot_name, int x, int y, int capacity, Environment* p_a)
 {
     // Constructor with user input
     x_pos = x;
@@ -124,6 +123,7 @@ Robot::Robot(std::string name, int x, int y, int capacity, Environment* p_a)
     current_envo = p_a;
     battery = Battery(capacity);
     p_a->grid[y][x] = 3;
+    name = robot_name;
 
 }
 
@@ -152,13 +152,13 @@ Robot::Robot(std::string filename, Environment* p_a)
             }
             if (file_info.find("robot_x") != std::string::npos)
             {
-                x_pos = std::stoi(file_info_att);
+                x_pos = std::stoi(file_info_att) - 1;
                 
                 continue;
             }
             if (file_info.find("robot_y") != std::string::npos)
             {
-                y_pos = std::stoi(file_info_att);
+                y_pos = std::stoi(file_info_att) - 1;
 
                 continue;
             }
@@ -175,28 +175,43 @@ Robot::Robot(std::string filename, Environment* p_a)
     battery = Battery(capacity);
     current_envo = p_a;
     p_a->grid[y_pos][x_pos] = 3;
-
 }
 
 /* ===========================Class Methods================================ */
 
-void Robot::stop_robot()
+bool Robot::stop_robot()
 {
     // Stops the robot
-    has_charge = false;
+    if (has_charge()){
+        return false;
+    }
+    return true;
+}
+
+void Robot::show_battery()
+{
+    std::cout << name << " current battery level: " << battery.get_battery_level() << std::endl;
+}
+
+bool Robot::has_charge()
+{
+    if (battery.get_battery_level() < 1)
+    {
+        return false;
+    }
+    return true;
 }
 
 /* =============================Model 1===================================== */
 
 class Model1 : public Robot
 {
-    public:
     Bumper bumper;
+    public:
     Model1(std::string, int, int, int, Environment*);
     Model1(std::string, Environment*);
-    void clean();
     void return_to_charger();
-    void update_pos();
+    void clean();
 };
 
 Model1::Model1(std::string name, int x, int y, int capacity, Environment* p_a) : Robot(name, x, y, capacity, p_a)
@@ -209,9 +224,9 @@ Model1::Model1(std::string filename, Environment* p_a) : Robot(filename, p_a)
     bumper = Bumper(p_a);
 }
 
-void Model1::update_pos()
+void Model1::clean()
 {
-    if (battery.battery_level() < 1)
+    if (!has_charge())
     {
         return;
     }
@@ -261,9 +276,9 @@ void Model1::update_pos()
         return;
     }
 
-        battery.discharge();
-        current_envo->grid[y_pos][x_pos] = 3;
-        update_pos();
+    battery.discharge();
+    current_envo->grid[y_pos][x_pos] = 3;
+    clean();
 }
 
 
@@ -273,26 +288,15 @@ int main()
 {
     Environment room = Environment("environment_info.txt");
     Environment* p_a = &room;
-    Model1 bob = Model1("robo1", 0, 0, 100, p_a);
-    // bob.battery.show_battery();
-    // bob.battery.discharge();
-    // bob.battery.show_battery();
-    // bob.battery.discharge();
-    // bob.battery.show_battery();
-    // std::cout << room << std::endl;
-    // bob.update_pos();
-    // std::cout << room << std::endl;
-    // bob.update_pos();
-    // std::cout << room << std::endl;
-    // bob.update_pos();
-    // std::cout << room << std::endl;
-    // bob.update_pos();
-    // std::cout << room << std::endl;
-    while (bob.battery.battery_level() > 0)
+    // Model1 bob = Model1("robo1", 0, 0, 100, p_a);
+    Model1 bob = Model1("robot_info.txt", p_a);
+    
+    while (!bob.stop_robot())
     {
-        bob.update_pos();
-        bob.battery.show_battery();
+        bob.clean();
+        bob.show_battery();
         std::cout << room << std::endl;
+        
     }
     
 
