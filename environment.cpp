@@ -315,7 +315,7 @@ void customInitialization(Environment *p_room)
     int answer = 0;
     std::cin >> answer;
 
-    if (answer == 0)
+    if (answer == 1)
     {
         int x_charger = 0, y_charger = 0;
         std::cout << "Value must be between 1 and " << width << std::endl;

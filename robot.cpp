@@ -23,6 +23,7 @@ Bumper::Bumper(Environment* p_a)
 
 bool Bumper::calc_collision(int x, int y)
 {
+
     if (x < 0 || x >= current_envo->width || y < 0 || y >= current_envo->height)
     {
         // Environment borders
@@ -210,7 +211,10 @@ Model1::Model1(std::string filename, Environment* p_a) : Robot(filename, p_a)
 
 void Model1::update_pos()
 {
-    
+    if (battery.battery_level() < 1)
+    {
+        return;
+    }
 
     int charger_x = current_envo->charging_station_x - 1;
     int charger_y = current_envo->charging_station_y - 1;
@@ -257,6 +261,7 @@ void Model1::update_pos()
         return;
     }
 
+        battery.discharge();
         current_envo->grid[y_pos][x_pos] = 3;
         update_pos();
 }
