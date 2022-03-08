@@ -16,13 +16,13 @@ Bumper::Bumper(Environment* p_a)
 bool Bumper::calc_collision(int x, int y)
 {
 
-    if (x < 0 || x >= current_envo->width || y < 0 || y >= current_envo->height)
+    if (x < 0 || x >= current_envo->get_width() || y < 0 || y >= current_envo->get_height())
     {
         // Environment borders
         return true;
     }
 
-    if ((*current_envo).grid[y][x] == 1)
+    if (current_envo->get_grid()[y][x] == 1)
     {
         // Obstacle
         return true;
@@ -73,7 +73,7 @@ Robot::Robot(std::string robot_name, int x, int y, int capacity, Environment* p_
     y_pos = y;
     current_envo = p_a;
     battery = Battery(capacity);
-    p_a->grid[y][x] = 3;
+    p_a->set_element(x, y, 3);
     name = robot_name;
 
 }
@@ -125,7 +125,7 @@ Robot::Robot(std::string filename, Environment* p_a)
     }
     battery = Battery(capacity);
     current_envo = p_a;
-    p_a->grid[y_pos][x_pos] = 3;
+    p_a->set_element(x_pos, y_pos, 3);
 }
 
 /* ===========================Class Methods================================ */
@@ -173,14 +173,14 @@ void Model1::clean()
         return;
     }
 
-    int charger_x = current_envo->charging_station_x - 1;
-    int charger_y = current_envo->charging_station_y - 1;
+    int charger_x = current_envo->get_charging_x() - 1;
+    int charger_y = current_envo->get_charging_y() - 1;
     if (x_pos == charger_x && y_pos == charger_y){
-        current_envo->grid[y_pos][x_pos] = 4;
+        current_envo->set_element(x_pos, y_pos, 4);
     }
     else 
     {
-        current_envo->grid[y_pos][x_pos] = 0;
+        current_envo->set_element(x_pos, y_pos, 0);
     }
 
     int dir = (rand() % 4); // Pick a direction
@@ -190,7 +190,7 @@ void Model1::clean()
         // Left
         --x_pos;
         battery.discharge();
-        current_envo->grid[y_pos][x_pos] = 3;
+        current_envo->set_element(x_pos, y_pos, 3);
         return;
     }
     if (dir == 1 && !(bumper.calc_collision(x_pos, y_pos - 1)))
@@ -198,7 +198,7 @@ void Model1::clean()
         // Up
         --y_pos;
         battery.discharge();
-        current_envo->grid[y_pos][x_pos] = 3;
+        current_envo->set_element(x_pos, y_pos, 3);
         return;
     }
     if (dir == 2 && !(bumper.calc_collision(x_pos + 1, y_pos)))
@@ -206,7 +206,7 @@ void Model1::clean()
         // Right
         ++x_pos;
         battery.discharge();
-        current_envo->grid[y_pos][x_pos] = 3;
+        current_envo->set_element(x_pos, y_pos, 3);
         return;
     }
     if (dir == 3 && !(bumper.calc_collision(x_pos, y_pos + 1)))
@@ -214,12 +214,12 @@ void Model1::clean()
         // Down
         ++y_pos;
         battery.discharge();
-        current_envo->grid[y_pos][x_pos] = 3;
+        current_envo->set_element(x_pos, y_pos, 3);
         return;
     }
 
     battery.discharge();
-    current_envo->grid[y_pos][x_pos] = 3;
+    current_envo->set_element(x_pos, y_pos, 3);
     clean();
 }
 

@@ -266,6 +266,11 @@ void Environment::save_to_file(std::string filename)
     }
 }
 
+void Environment::set_element(int x, int y, int value)
+{
+    grid[y][x] = value;
+}
+
 int Environment::get_width()
 {
     return width;
@@ -281,6 +286,10 @@ int Environment::get_charging_x()
 int Environment::get_charging_y()
 {
     return charging_station_y;
+}
+int** Environment::get_grid()
+{
+    return grid;
 }
 
 /* ===========================Operator Overload============================== */

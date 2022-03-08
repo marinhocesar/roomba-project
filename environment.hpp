@@ -22,10 +22,12 @@ public:
     void add_obstacle(int, int, int, int);
     void add_obstacle(std::string);
     void save_to_file(std::string);
+    void set_element(int, int, int);
     int get_width();
     int get_height();
     int get_charging_x();
     int get_charging_y();
+    int** get_grid();
     friend std::ostream &operator<<(std::ostream &, const Environment &);
 };
 
