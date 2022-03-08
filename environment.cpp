@@ -133,6 +133,7 @@ Environment::Environment(std::string filename)
     grid = createMatrix(width, height);
     fillMatrix(grid, width, height);
     set_charging_station(charging_station_x, charging_station_y);
+    add_obstacle(filename);
 }
 
 /* ===========================Class Methods================================== */

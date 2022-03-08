@@ -25,18 +25,18 @@ bool Bumper::calc_collision(int x, int y)
 {
     if (x < 0 || x >= current_envo->width || y < 0 || y >= current_envo->height)
     {
-        std::cout << "1" << std::endl;
+        // Environment borders
         return true;
     }
 
-    if ((*current_envo).grid[x][y] == 1)
+    if ((*current_envo).grid[y][x] == 1)
     {
-        std::cout << "2" << std::endl;
+        // Obstacle
         return true;
     }
     else
     {
-        std::cout << "nao ha obstaculos" << std::endl;
+        // Free path
         return false;
     }
 
@@ -55,6 +55,7 @@ public:
     Battery(int);
     void discharge();
     void charge();
+    int battery_level();
     void show_battery();
 };
 
@@ -78,10 +79,16 @@ void Battery::charge()
     ++current_battery;
 }
 
+int Battery::battery_level()
+{
+    return current_battery;
+}
+
 void Battery::show_battery()
 {
     std::cout << current_battery << std::endl;
 }
+
 /* ======================Robot Class======================================= */
 
 class Robot
@@ -115,7 +122,7 @@ Robot::Robot(std::string name, int x, int y, int capacity, Environment* p_a)
     y_pos = y;
     current_envo = p_a;
     battery = Battery(capacity);
-    p_a->grid[x][y] = 3;
+    p_a->grid[y][x] = 3;
 
 }
 
@@ -166,6 +173,7 @@ Robot::Robot(std::string filename, Environment* p_a)
     }
     battery = Battery(capacity);
     current_envo = p_a;
+    p_a->grid[y_pos][x_pos] = 3;
 
 }
 
@@ -202,39 +210,55 @@ Model1::Model1(std::string filename, Environment* p_a) : Robot(filename, p_a)
 
 void Model1::update_pos()
 {
-    if (x_pos == current_envo->charging_station_x && y_pos == current_envo->charging_station_y){
-        current_envo->grid[x_pos][y_pos] == 4;
+    
+
+    int charger_x = current_envo->charging_station_x - 1;
+    int charger_y = current_envo->charging_station_y - 1;
+    if (x_pos == charger_x && y_pos == charger_y){
+        current_envo->grid[y_pos][x_pos] = 4;
     }
     else 
     {
-        current_envo->grid[x_pos][y_pos] == 0;
+        current_envo->grid[y_pos][x_pos] = 0;
     }
 
     int dir = (rand() % 4); // Pick a direction
-    std::cout << dir << std::endl;
-    if (dir == 0 && (bumper.calc_collision(x_pos - 1, y_pos) != true))
+
+    if (dir == 0 && !(bumper.calc_collision(x_pos - 1, y_pos)))
     {
         // Left
         --x_pos;
+        battery.discharge();
+        current_envo->grid[y_pos][x_pos] = 3;
+        return;
     }
-    if (dir == 1 && (bumper.calc_collision(x_pos, y_pos - 1) != true))
+    if (dir == 1 && !(bumper.calc_collision(x_pos, y_pos - 1)))
     {
         // Up
         --y_pos;
+        battery.discharge();
+        current_envo->grid[y_pos][x_pos] = 3;
+        return;
     }
-    if (dir == 2 && (bumper.calc_collision(x_pos + 1, y_pos) != true))
+    if (dir == 2 && !(bumper.calc_collision(x_pos + 1, y_pos)))
     {
         // Right
         ++x_pos;
+        battery.discharge();
+        current_envo->grid[y_pos][x_pos] = 3;
+        return;
     }
-    if (dir == 3 && (bumper.calc_collision(x_pos, y_pos + 1) != true))
+    if (dir == 3 && !(bumper.calc_collision(x_pos, y_pos + 1)))
     {
         // Down
         ++y_pos;
+        battery.discharge();
+        current_envo->grid[y_pos][x_pos] = 3;
+        return;
     }
 
-        current_envo->grid[x_pos][y_pos] == 3; // Sets the roomba to the new position
-        std::cout << "x=" << x_pos << ", y=" << y_pos << std::endl;
+        current_envo->grid[y_pos][x_pos] = 3;
+        update_pos();
 }
 
 
@@ -242,25 +266,31 @@ void Model1::update_pos()
 
 int main()
 {
-    Environment room = Environment(8, 8);
+    Environment room = Environment("environment_info.txt");
     Environment* p_a = &room;
     Model1 bob = Model1("robo1", 0, 0, 100, p_a);
-    bob.battery.show_battery();
-    bob.battery.discharge();
-    bob.battery.show_battery();
-    bob.battery.discharge();
-    bob.battery.show_battery();
-    std::cout << room << std::endl;
-    bob.update_pos();
-    std::cout << room << std::endl;
-    bob.update_pos();
-    std::cout << room << std::endl;
-    bob.update_pos();
-    std::cout << room << std::endl;
-    bob.update_pos();
-    std::cout << room << std::endl;
-    bob.current_envo->grid[5][5] = 3;
-    std::cout << room << std::endl;
+    // bob.battery.show_battery();
+    // bob.battery.discharge();
+    // bob.battery.show_battery();
+    // bob.battery.discharge();
+    // bob.battery.show_battery();
+    // std::cout << room << std::endl;
+    // bob.update_pos();
+    // std::cout << room << std::endl;
+    // bob.update_pos();
+    // std::cout << room << std::endl;
+    // bob.update_pos();
+    // std::cout << room << std::endl;
+    // bob.update_pos();
+    // std::cout << room << std::endl;
+    while (bob.battery.battery_level() > 0)
+    {
+        bob.update_pos();
+        bob.battery.show_battery();
+        std::cout << room << std::endl;
+    }
+    
+
 
     return 0;
 }
