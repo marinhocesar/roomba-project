@@ -6,20 +6,20 @@
 #include <string.h>
 #include "environment.hpp"
 
-/* ==============================Classes======================================= */
+/* ==============================Class Prototypes============================ */
 
 class Bumper
 {
-    Environment* current_envo;
+    Environment *current_envo;
+
 public:
     Bumper();
-    Bumper(Environment*);
+    Bumper(Environment *);
     bool calc_collision(int, int);
 };
 
 class Battery
 {
-
     int max_battery;
     int current_battery;
 
@@ -35,14 +35,15 @@ public:
 class Robot
 {
 protected:
-    Environment* current_envo;
+    Environment *current_envo;
     std::string name = "robot";
     int x_pos = 0, y_pos = 0;
     Battery battery;
+
 public:
     Robot();
-    Robot(std::string, int, int, int, Environment*);
-    Robot(std::string, Environment*);
+    Robot(std::string, int, int, int, Environment *);
+    Robot(std::string, Environment *);
     bool stop_robot();
     void show_battery();
     bool has_charge();
@@ -51,12 +52,12 @@ public:
 class Model1 : public Robot
 {
     Bumper bumper;
-    public:
-    Model1(std::string, int, int, int, Environment*);
-    Model1(std::string, Environment*);
+
+public:
+    Model1(std::string, int, int, int, Environment *);
+    Model1(std::string, Environment *);
     void return_to_charger();
     void clean();
 };
-
 
 #endif
