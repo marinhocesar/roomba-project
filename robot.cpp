@@ -1,15 +1,7 @@
-#include "environment.hpp"
+#include "robot.hpp"
 
 /* =============================Bumper====================================== */
 
-class Bumper
-{
-    Environment* current_envo;
-public:
-    Bumper();
-    Bumper(Environment*);
-    bool calc_collision(int, int);
-};
 
 Bumper::Bumper()
 {
@@ -45,21 +37,6 @@ bool Bumper::calc_collision(int x, int y)
 
 /* =====================Battery Class======================================= */
 
-class Battery
-{
-
-    int max_battery;
-    int current_battery;
-
-public:
-    Battery();
-    Battery(int);
-    void discharge();
-    void charge();
-    int get_battery_level();
-    void show_battery();
-};
-
 Battery::Battery()
 {
     max_battery = 100;
@@ -88,32 +65,6 @@ int Battery::get_battery_level()
 }
 
 /* ======================Robot Class======================================= */
-
-class Robot
-{
-protected:
-    Environment* current_envo;
-    std::string name = "robot";
-    int x_pos = 0, y_pos = 0;
-    Battery battery;
-public:
-    Robot();
-    Robot(std::string, int, int, int, Environment*);
-    Robot(std::string, Environment*);
-    bool stop_robot();
-    void show_battery();
-    bool has_charge();
-};
-
-// Robot::Robot()
-// {
-//     // Constructor without user input
-//     x_pos = 0;
-//     y_pos = 0;
-//     battery = Battery();
-//     Environment envo = Environment();
-//     current_envo = &envo;
-// }
 
 Robot::Robot(std::string robot_name, int x, int y, int capacity, Environment* p_a)
 {
@@ -204,15 +155,6 @@ bool Robot::has_charge()
 
 /* =============================Model 1===================================== */
 
-class Model1 : public Robot
-{
-    Bumper bumper;
-    public:
-    Model1(std::string, int, int, int, Environment*);
-    Model1(std::string, Environment*);
-    void return_to_charger();
-    void clean();
-};
 
 Model1::Model1(std::string name, int x, int y, int capacity, Environment* p_a) : Robot(name, x, y, capacity, p_a)
 {
@@ -284,22 +226,3 @@ void Model1::clean()
 
 /* ======================================================================== */
 
-int main()
-{
-    Environment room = Environment("environment_info.txt");
-    Environment* p_a = &room;
-    // Model1 bob = Model1("robo1", 0, 0, 100, p_a);
-    Model1 bob = Model1("robot_info.txt", p_a);
-    
-    while (!bob.stop_robot())
-    {
-        bob.clean();
-        bob.show_battery();
-        std::cout << room << std::endl;
-        
-    }
-    
-
-
-    return 0;
-}
