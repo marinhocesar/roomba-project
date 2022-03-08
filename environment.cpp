@@ -266,6 +266,23 @@ void Environment::save_to_file(std::string filename)
     }
 }
 
+int Environment::get_width()
+{
+    return width;
+}
+int Environment::get_height()
+{
+   return height; 
+}
+int Environment::get_charging_x()
+{
+    return charging_station_x;
+}
+int Environment::get_charging_y()
+{
+    return charging_station_y;
+}
+
 /* ===========================Operator Overload============================== */
 
 std::ostream &operator<<(std::ostream &os, const Environment &env)
@@ -382,10 +399,10 @@ void obstaclesMenu(Environment *room)
         if (answer == 1)
         {
             int x = -1, y = -1;
-            std::cout << "Value must be between 1 and " << room->width << std::endl;
+            std::cout << "Value must be between 1 and " << room->get_width() << std::endl;
             std::cout << "Enter the X coordinate: ";
             std::cin >> x;
-            std::cout << "Value must be between 1 and " << room->height << std::endl;
+            std::cout << "Value must be between 1 and " << room->get_height() << std::endl;
             std::cout << "Enter the Y coordinate: ";
             std::cin >> y;
 
@@ -401,16 +418,16 @@ void obstaclesMenu(Environment *room)
         else if (answer == 2)
         {
             int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
-            std::cout << "Value must be between 1 and " << room->width << std::endl;
+            std::cout << "Value must be between 1 and " << room->get_width() << std::endl;
             std::cout << "Enter the X coordinate of the top-left corner: ";
             std::cin >> x1;
-            std::cout << "Value must be between 1 and " << room->height << std::endl;
+            std::cout << "Value must be between 1 and " << room->get_height() << std::endl;
             std::cout << "Enter the Y coordinate of the top-left corner: ";
             std::cin >> y1;
-            std::cout << "Value must be between 1 and " << room->width << std::endl;
+            std::cout << "Value must be between 1 and " << room->get_width() << std::endl;
             std::cout << "Enter the X coordinate of the bottom-right corner: ";
             std::cin >> x2;
-            std::cout << "Value must be between 1 and " << room->height << std::endl;
+            std::cout << "Value must be between 1 and " << room->get_height() << std::endl;
             std::cout << "Enter the Y coordinate of the bottom-right corner: ";
             std::cin >> y2;
 

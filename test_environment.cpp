@@ -33,7 +33,7 @@ int main()
         else
         {
             fileInitialization(p_room);
-            p_room->set_charging_station(p_room->charging_station_x, p_room->charging_station_x);
+            p_room->set_charging_station(p_room->get_charging_x(), p_room->get_charging_y());
             std::string filename = "environment_info.txt";
             p_room->add_obstacle(filename);
         }
@@ -77,10 +77,10 @@ int main()
             else
             {
                 int x_charger = 0, y_charger = 0;
-                std::cout << "Value must be between 1 and " << p_room->width << std::endl;
+                std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
                 std::cout << "X coordinate for the charging station: ";
                 std::cin >> x_charger;
-                std::cout << "Value must be between 1 and " << p_room->height << std::endl;
+                std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
                 std::cout << "New Y coordinate for the charging station: ";
                 std::cin >> y_charger;
                 p_room->set_charging_station(x_charger, y_charger);

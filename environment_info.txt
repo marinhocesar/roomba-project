@@ -1,7 +1,7 @@
 width= 11
 height= 7
 charging_station_x= 1
-charging_station_y= 1
+charging_station_y= 5
 obstacle= 1, 4
 obstacle= 1, 6
 obstacle= 1, 7

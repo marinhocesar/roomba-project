@@ -9,10 +9,10 @@
 
 class Environment
 {
-public:
     int width = 8, height = 8;
     int charging_station_x = 1, charging_station_y = 1;
     int **grid;
+public:
     Environment();
     Environment(int, int);
     Environment(int, int, int, int);
@@ -22,6 +22,10 @@ public:
     void add_obstacle(int, int, int, int);
     void add_obstacle(std::string);
     void save_to_file(std::string);
+    int get_width();
+    int get_height();
+    int get_charging_x();
+    int get_charging_y();
     friend std::ostream &operator<<(std::ostream &, const Environment &);
 };
 
