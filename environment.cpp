@@ -315,6 +315,10 @@ std::ostream &operator<<(std::ostream &os, const Environment &env)
 }
 
 //
+void standardInitialization(Environment *p_room)
+{
+    *p_room = Environment();
+}
 
 void customInitialization(Environment *p_room)
 {
@@ -350,7 +354,8 @@ void customInitialization(Environment *p_room)
         std::cout << "Value must be between 1 and " << height << std::endl;
         std::cout << "Y coordinate of the charging station: ";
         std::cin >> y_charger;
-        *p_room = Environment(width, height, x_charger, y_charger);    
+        *p_room = Environment(width, height, x_charger, y_charger);
+        return;    
     }
 
 

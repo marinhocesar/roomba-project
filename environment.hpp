@@ -35,7 +35,7 @@ public:
 
 /*==================Environment Test Functions=========================== */
 
-
+void standardInitialization(Environment*);
 void customInitialization(Environment*);
 void fileInitialization(Environment*);
 void saveMenu(Environment*);
