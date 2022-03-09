@@ -19,12 +19,14 @@ bool Bumper::calc_collision(int x, int y)
     if (x < 0 || x >= current_envo->get_width() || y < 0 || y >= current_envo->get_height())
     {
         // Environment borders
+        std::cout << "Wall detected ";
         return true;
     }
 
     if (current_envo->get_grid()[y][x] == 1)
     {
         // Obstacle
+        std::cout << "Obstacle detected ";
         return true;
     }
     else
@@ -65,6 +67,11 @@ int Battery::get_battery_level()
 }
 
 /* ======================Robot Class======================================= */
+
+Robot::Robot()
+{
+
+}
 
 Robot::Robot(std::string robot_name, int x, int y, int capacity, Environment* p_a)
 {
@@ -139,6 +146,7 @@ bool Robot::stop_robot()
     return true;
 }
 
+
 void Robot::show_battery()
 {
     std::cout << name << " current battery level: " << battery.get_battery_level() << std::endl;
@@ -151,6 +159,11 @@ bool Robot::has_charge()
         return false;
     }
     return true;
+}
+
+Environment* Robot::get_environment()
+{
+    return current_envo;
 }
 
 /* =============================Model 1===================================== */
@@ -173,6 +186,7 @@ void Model1::clean()
         return;
     }
 
+    std::string direction[4] = {"left", "up", "right", "down"};
     int charger_x = current_envo->get_charging_x() - 1;
     int charger_y = current_envo->get_charging_y() - 1;
     if (x_pos == charger_x && y_pos == charger_y){
@@ -189,40 +203,105 @@ void Model1::clean()
     {
         // Left
         --x_pos;
-        battery.discharge();
-        current_envo->set_element(x_pos, y_pos, 3);
+        std::cout << "Moving " << direction[dir] << std::endl;
+        update_cell();
         return;
     }
     if (dir == 1 && !(bumper.calc_collision(x_pos, y_pos - 1)))
     {
         // Up
         --y_pos;
-        battery.discharge();
-        current_envo->set_element(x_pos, y_pos, 3);
+        std::cout << "Moving " << direction[dir] << std::endl;
+        update_cell();
         return;
     }
     if (dir == 2 && !(bumper.calc_collision(x_pos + 1, y_pos)))
     {
         // Right
         ++x_pos;
-        battery.discharge();
-        current_envo->set_element(x_pos, y_pos, 3);
+        std::cout << "Moving " << direction[dir] << std::endl;
+        update_cell();
         return;
     }
     if (dir == 3 && !(bumper.calc_collision(x_pos, y_pos + 1)))
     {
         // Down
         ++y_pos;
-        battery.discharge();
-        current_envo->set_element(x_pos, y_pos, 3);
+        std::cout << "Moving " << direction[dir] << std::endl;
+        update_cell();
         return;
     }
-
-    battery.discharge();
-    current_envo->set_element(x_pos, y_pos, 3);
+    std::cout << "while trying to move " << direction[dir];
+    std::cout << "!"<< std::endl;
+    update_cell();
+    std::cout << "\n";
     clean();
+}
+
+void Model1::update_cell(){
+    battery.discharge();
+    show_battery();
+    current_envo->set_element(x_pos, y_pos, 3);
 }
 
 
 /* ======================================================================== */
 
+void customRobot(Environment* p_r, Robot*& p_rob)
+{
+    int x = 0, y = 0, battery_capacity = 0;
+    std::cout << "\nCustom Robot" << std::endl;
+    std::string robot_name = "";
+    std::cout << "Enter robot name: ";
+    std::cin.ignore();
+    std::getline(std::cin, robot_name);
+    if (robot_name == "")
+    {
+        robot_name = "generic_robot";
+    }
+    std::cout << "The coordinates must be integers." << std::endl;
+    std::cout << "Enter the X coordinate for the starting position: ";
+    std::cin >> x;
+    std::cout << "Enter the Y coordinate for the starting position: ";
+    std::cin >> y;
+    std::cout << "Enter battery capactiy: ";
+    std::cin >> battery_capacity;
+
+    if (x < 1 || y < 1 || x > p_r->get_width() || y > p_r->get_height())
+    {
+        std::cout << "Invalid arguments." << std::endl;
+        return customRobot(p_r, p_rob);
+    }
+
+    return modelRobot(robot_name, x-1, y-1, battery_capacity, p_r, p_rob);
+}
+
+void fileRobot(Environment* p_r, Robot*& p_rob)
+{
+    return;
+}
+
+void modelRobot(std::string name, int x, int y, int btr_cp, Environment* p_r, Robot*& p_rob)
+{
+    std::cout << "\nChose the model of the robot" << std::endl;
+    std::cout << "1- Model1." << std::endl;
+    std::cout << "2- Model2." << std::endl;
+    int answer = -1;
+    std::cin >> answer;
+    if (answer != 1 && answer != 2)
+    {
+        std::cout << "Sorry, this is not an option." << std::endl;
+        return modelRobot(name, x, y, btr_cp, p_r, p_rob);
+    }
+
+    if (answer == 1)
+    {
+
+        p_rob = new Model1(name, x, y, btr_cp, p_r);
+        return;
+    }
+
+    std::cout << "This option is not yet available!" << std::endl;
+    return modelRobot(name, x, y, btr_cp, p_r, p_rob);
+
+}

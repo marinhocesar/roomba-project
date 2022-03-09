@@ -44,20 +44,32 @@ public:
     Robot();
     Robot(std::string, int, int, int, Environment *);
     Robot(std::string, Environment *);
+    virtual void clean(){
+        std::cout << "cleaning" << std::endl;
+    }
+    
     bool stop_robot();
     void show_battery();
     bool has_charge();
+    Environment* get_environment();
 };
 
 class Model1 : public Robot
 {
-    Bumper bumper;
 
+    Bumper bumper;
 public:
     Model1(std::string, int, int, int, Environment *);
     Model1(std::string, Environment *);
     void return_to_charger();
     void clean();
+    void update_cell();
+    
 };
 
 #endif
+
+/*=======================Roomba Test Functions=========================== */
+void customRobot(Environment*, Robot*&);
+void fileRobot(Environment*, Robot*&); //ainda falta
+void modelRobot(std::string, int, int, int, Environment*, Robot*&);

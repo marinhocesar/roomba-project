@@ -390,6 +390,7 @@ void saveMenu(Environment *room)
     (*room).save_to_file(filename);
     std::cout << "\nFile saved as " << filename << ".txt" << std::endl;
 }
+
 void obstaclesMenu(Environment *room)
 {
     while (true)
@@ -468,4 +469,76 @@ void obstaclesMenu(Environment *room)
             std::cout << (*room) << std::endl;
         }
     }
+}
+
+void moveChargingStation(Environment* p_room)
+{
+    int x_charger = 0, y_charger = 0;
+    std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
+    std::cout << "X coordinate for the charging station: ";
+    std::cin >> x_charger;
+    std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
+    std::cout << "New Y coordinate for the charging station: ";
+    std::cin >> y_charger;
+    p_room->set_charging_station(x_charger, y_charger);
+}
+
+void addSingularObstacle(Environment* p_room)
+{
+    int x = -1, y = -1;
+            std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
+            std::cout << "Enter the X coordinate: ";
+            std::cin >> x;
+            std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
+            std::cout << "Enter the Y coordinate: ";
+            std::cin >> y;
+
+            if (x < 1 || y < 1)
+            {
+                std::cout << "Invalid arguments." << std::endl;
+                return;
+            }
+
+            p_room->add_obstacle(x, y);
+            std::cout << *p_room << std::endl;
+}
+
+void addRectOfObstacles(Environment* p_room)
+{
+    int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
+    std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
+    std::cout << "Enter the X coordinate of the top-left corner: ";
+    std::cin >> x1;
+    std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
+    std::cout << "Enter the Y coordinate of the top-left corner: ";
+    std::cin >> y1;
+    std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
+    std::cout << "Enter the X coordinate of the bottom-right corner: ";
+    std::cin >> x2;
+    std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
+    std::cout << "Enter the Y coordinate of the bottom-right corner: ";
+    std::cin >> y2;
+
+    if (x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 || x2 < x1 || y2 < y1)
+    {
+        std::cout << "Invalid arguments." << std::endl;
+        return;
+    }
+    p_room->add_obstacle(x1, y1, x2, y2);
+    std::cout << *p_room << std::endl;
+}
+
+void addObstaclesFromFile(Environment* p_room)
+{
+    std::string filename = "";
+    std::cout << "Enter the filename: ";
+    std::cin.ignore();
+    std::getline(std::cin, filename);
+    std::cout << filename << std::endl;
+    if (filename == "")
+    {
+        filename = "environment_info.txt";
+    }
+    p_room->add_obstacle(filename);
+    std::cout << *p_room << std::endl;
 }

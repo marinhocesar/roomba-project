@@ -40,3 +40,7 @@ void customInitialization(Environment*);
 void fileInitialization(Environment*);
 void saveMenu(Environment*);
 void obstaclesMenu(Environment*);
+void moveChargingStation(Environment*);
+void addSingularObstacle(Environment*);
+void addRectOfObstacles(Environment*);
+void addObstaclesFromFile(Environment*);
