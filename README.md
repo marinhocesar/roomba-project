@@ -2,8 +2,7 @@
 
 ## Projeto para a disciplina de Programação Avançada. 
 
-### Caio César Marinho, 
-### Jonathan Buarque 
+### Caio César Marinho e Jonathan Buarque 
 
 O programa principal se encontra no arquivo main.exe
 
