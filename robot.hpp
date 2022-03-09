@@ -1,9 +1,6 @@
 #ifndef ROBOT
 #define ROBOT
 
-#include <iostream>
-#include <fstream>
-#include <string.h>
 #include "environment.hpp"
 
 /* ==============================Class Prototypes============================ */
@@ -67,9 +64,10 @@ public:
     
 };
 
-#endif
-
 /*=======================Roomba Test Functions=========================== */
 void customRobot(Environment*, Robot*&);
 void fileRobot(Environment*, Robot*&); //ainda falta
 void modelRobot(std::string, int, int, int, Environment*, Robot*&);
+void modelRobot(std::string, Environment*, Robot*&);
+
+#endif

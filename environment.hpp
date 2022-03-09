@@ -31,8 +31,6 @@ public:
     friend std::ostream &operator<<(std::ostream &, const Environment &);
 };
 
-#endif
-
 /*==================Environment Test Functions=========================== */
 
 void standardInitialization(Environment*);
@@ -44,3 +42,5 @@ void moveChargingStation(Environment*);
 void addSingularObstacle(Environment*);
 void addRectOfObstacles(Environment*);
 void addObstaclesFromFile(Environment*);
+
+#endif

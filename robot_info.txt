@@ -1,4 +1,4 @@
-name= robo2
-robot_x= 7
-robot_y= 5
+name=robo2
+robot_x= 1
+robot_y= 4
 battery= 20
