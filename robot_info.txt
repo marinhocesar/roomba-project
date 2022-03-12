@@ -1,4 +1,4 @@
 name=robo2
 robot_x= 1
 robot_y= 4
-battery= 20
+battery= 50

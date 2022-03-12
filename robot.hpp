@@ -15,6 +15,16 @@ public:
     bool calc_collision(int, int);
 };
 
+class Laser
+{
+    Environment *current_envo;
+
+public:
+    Laser();
+    Laser(Environment *);
+    bool* calc_collision(int, int);
+};
+
 class Battery
 {
     int max_battery;
@@ -48,19 +58,36 @@ public:
     bool stop_robot();
     void show_battery();
     bool has_charge();
+    void update_cell();
     Environment* get_environment();
 };
 
 class Model1 : public Robot
 {
-
     Bumper bumper;
 public:
     Model1(std::string, int, int, int, Environment *);
     Model1(std::string, Environment *);
     void return_to_charger();
     void clean();
-    void update_cell();
+    
+    
+};
+
+class Model2 : public Robot
+{
+    bool* neighbors;
+    int angle; // 0=NW; 1=N; 2=NE; 3=W; 4=E; 5=SW; 6=S; 7=SE;
+    Laser laser;
+public:
+    Model2(std::string, int, int, int, Environment *);
+    Model2(std::string, Environment *);
+    bool get_neighbor(int);
+    void return_to_charger();
+    void rotate();
+    void advance();
+    void clean();
+    
     
 };
 

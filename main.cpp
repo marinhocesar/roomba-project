@@ -16,7 +16,7 @@ int main()
     std::cout << "Your Roomba will start cleaning." << std::endl;     
     
     while (!p_roomba->stop_robot())
-    {        
+    {   
         p_roomba->clean();
         std::cout << room << std::endl;
         

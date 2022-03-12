@@ -35,6 +35,72 @@ bool Bumper::calc_collision(int x, int y)
         return false;
     }
 
+
+}
+/* =============================Laser====================================== */
+
+
+Laser::Laser()
+{
+
+}
+
+Laser::Laser(Environment* p_a)
+{
+    current_envo = p_a;
+}
+
+bool* Laser::calc_collision(int x, int y)
+{
+    /*
+    Returns an array of booleans where each element is true or false depending
+    on the existence of an obstacle at the corresponding position on the grid 
+
+    0 1 2       0 0 0
+    3 X 4   ->  0 3 1
+    5 6 7       0 1 1
+    ^ indexes of elements surrounding X
+    
+    For the case above, a function call in X
+    would return {false, false, false, false, true, false, true, true}
+    */
+    bool* neighbors = new bool[8];
+    int count = 0;
+
+    for (int j=-1; j<2; ++j)
+    {
+        for (int i=-1; i<2; ++i)
+        {
+            if (i == 0 && j == 0)
+            {
+                continue;
+            }
+            int neigh_x = x + i;
+            int neigh_y = y + j;
+            bool cond1 = (neigh_x < 0 || neigh_x >= current_envo->get_width());
+            bool cond2 = (neigh_y < 0 || neigh_y >= current_envo->get_height());
+            if (cond1 || cond2)
+            {
+                // Environment borders
+                neighbors[count] = true;
+                ++count;
+                continue;
+            }
+
+            if (current_envo->get_grid()[neigh_y][neigh_x] == 1)
+            {
+                // Obstacle
+                neighbors[count] = true;
+                ++count;
+                continue;
+            }
+            
+            // Free path
+            neighbors[count] = false;
+            ++count;
+        }
+    }
+    return neighbors;
 }
 
 /* =====================Battery Class======================================= */
@@ -70,7 +136,7 @@ int Battery::get_battery_level()
 
 Robot::Robot()
 {
-
+    // 
 }
 
 Robot::Robot(std::string robot_name, int x, int y, int capacity, Environment* p_a)
@@ -132,22 +198,23 @@ Robot::Robot(std::string filename, Environment* p_a)
     }
     battery = Battery(capacity);
     current_envo = p_a;
-    bool cond1 = (x_pos < 1 || x_pos > p_a->get_width());
-    bool cond2 = (y_pos < 1 || y_pos > p_a->get_height());
+    bool cond1 = (x_pos < 0 || x_pos > p_a->get_width() - 1);
+    bool cond2 = (y_pos < 0 || y_pos > p_a->get_height() - 1);
     if (cond1 || cond2)
     {
         std::cout << "File information for robot starting position is invalid";
         std::cout << ".\n" << "Robot will start at charging station.";
-        x_pos = p_a->get_charging_x();
-        y_pos = p_a->get_charging_y();
+        x_pos = p_a->get_charging_x() - 1;
+        y_pos = p_a->get_charging_y() - 1;
     }
-    bool cond3 = p_a->get_grid()[y_pos-1][x_pos-1] == 1;
-    if (cond1 || cond2)
+
+    bool cond3 = p_a->get_grid()[y_pos][x_pos] == 1;
+    if (cond3)
     {
         std::cout << "The robot's starting position has to be free of obstacles.";
         std::cout << ".\n" << "Robot will start at charging station.";
-        x_pos = p_a->get_charging_x();
-        y_pos = p_a->get_charging_y();
+        x_pos = p_a->get_charging_x() - 1;
+        y_pos = p_a->get_charging_y() - 1;
     }
 
     p_a->set_element(x_pos, y_pos, 3);
@@ -177,6 +244,12 @@ bool Robot::has_charge()
         return false;
     }
     return true;
+}
+
+void Robot::update_cell(){
+    battery.discharge();
+    show_battery();
+    current_envo->set_element(x_pos, y_pos, 3);
 }
 
 Environment* Robot::get_environment()
@@ -256,12 +329,122 @@ void Model1::clean()
     clean();
 }
 
-void Model1::update_cell(){
-    battery.discharge();
-    show_battery();
-    current_envo->set_element(x_pos, y_pos, 3);
+
+/* =============================Model 2===================================== */
+
+
+Model2::Model2(std::string name, int x, int y, int capacity, Environment* p_a) : Robot(name, x, y, capacity, p_a)
+{
+    angle = rand() % 8;
+    laser = Laser(p_a);
+    neighbors = laser.calc_collision(x_pos, y_pos);
 }
 
+Model2::Model2(std::string filename, Environment* p_a) : Robot(filename, p_a)
+{
+    angle = rand() % 8;
+    laser = Laser(p_a);
+    neighbors = laser.calc_collision(x_pos, y_pos);
+}
+
+void Model2::clean()
+{
+    if (!has_charge())
+    {
+        // Won't clean if has no charge
+        return;
+    }
+
+    if (!neighbors[angle])
+    {
+        // If the direction that it faces is clear, the robot advances
+        advance();
+    }
+    else
+    {
+        /*
+        If the direction the robot faces has an obstacle,
+        it picks other direction.
+        */
+        rotate();
+        advance();
+    }
+}
+
+bool Model2::get_neighbor(int index)
+{
+    if (index<0 || index>7)
+    {
+        std::cout << "Neighboring cells must be refered with index values";
+        std::cout << " between 0 and 7" << std::endl;
+        return true;
+    }
+    return neighbors[index];
+}
+
+void Model2::rotate()
+{
+    angle = rand() % 8;
+    if (neighbors[angle])
+    {   
+        return rotate();
+    }
+    std::cout << "Rotating..." << std::endl;
+    battery.discharge();
+    show_battery();
+}
+
+void Model2::advance()
+{
+    int charger_x = current_envo->get_charging_x() - 1;
+    int charger_y = current_envo->get_charging_y() - 1;
+    if (x_pos == charger_x && y_pos == charger_y){
+        current_envo->set_element(x_pos, y_pos, 4);
+    }
+    else 
+    {
+        current_envo->set_element(x_pos, y_pos, 0);
+    }
+
+    if (angle == 0)
+    {
+        --x_pos;
+        --y_pos;
+    }
+    else if (angle == 1)
+    {
+        --y_pos;
+    }
+    else if (angle == 2)
+    {
+        ++x_pos;
+        --y_pos;
+    }
+    else if (angle == 3)
+    {
+        --x_pos;
+    }
+    else if (angle == 4)
+    {
+        ++x_pos;
+    }
+    else if (angle == 5)
+    {
+        --x_pos;
+        ++y_pos;
+    }
+    else if (angle == 6)
+    {
+        ++y_pos;
+    }
+    else if (angle == 7)
+    {
+        ++x_pos;
+        ++y_pos;
+    }
+    neighbors = laser.calc_collision(x_pos, y_pos);
+    update_cell();
+}
 
 /* ======================================================================== */
 
@@ -337,9 +520,11 @@ void modelRobot(std::string name, int x, int y, int btr_cp, Environment* p_r, Ro
         return;
     }
 
-    std::cout << "This option is not yet available!" << std::endl;
-    
-    return modelRobot(name, x, y, btr_cp, p_r, p_rob);
+    // std::cout << "This option is not yet available!" << std::endl;
+    // return modelRobot(name, x, y, btr_cp, p_r, p_rob);
+
+    p_rob = new Model2(name, x, y, btr_cp, p_r);
+    return;
 }
 
 void modelRobot(std::string filename, Environment* p_r, Robot*& p_rob)
@@ -359,12 +544,13 @@ void modelRobot(std::string filename, Environment* p_r, Robot*& p_rob)
     if (answer == 1)
     {
         
-        std::cout << "aqui 355!" << std::endl;
         p_rob = new Model1(filename, p_r);
         return;
     }
 
-    std::cout << "This option is not yet available!" << std::endl;
+    // std::cout << "This option is not yet available!" << std::endl;
+    // return modelRobot(filename, p_r, p_rob);
     
-    return modelRobot(filename, p_r, p_rob);
+    p_rob = new Model2(filename, p_r);
+    return;
 }
