@@ -2,6 +2,7 @@
 #define ROBOT
 
 #include "environment.hpp"
+#include "a_star.hpp"
 
 /* ==============================Class Prototypes============================ */
 
@@ -36,6 +37,7 @@ public:
     void discharge();
     void charge();
     int get_battery_level();
+    int get_max_battery();
     void show_battery();
 };
 
@@ -46,6 +48,7 @@ protected:
     std::string name = "robot";
     int x_pos = 0, y_pos = 0;
     Battery battery;
+    bool returning = false;
 
 public:
     Robot();
@@ -54,12 +57,21 @@ public:
     virtual void clean(){
         std::cout << "cleaning" << std::endl;
     }
-    
+    void go_to(int, int);
+    void reset_cell();
     bool stop_robot();
     void show_battery();
     bool has_charge();
     void update_cell();
     Environment* get_environment();
+    int get_x_pos();
+    int get_y_pos();
+    virtual void return_to_charger(){}
+    void a_star(Environment*, int, int);
+    void reconstruct_path(int*, std::map<int,int>, int, int, int);
+    void cleaning_routine();
+    virtual void charging(){}
+    virtual std::vector<int> get_neighbors(Environment*, int, int){}
 };
 
 class Model1 : public Robot
@@ -68,7 +80,7 @@ class Model1 : public Robot
 public:
     Model1(std::string, int, int, int, Environment *);
     Model1(std::string, Environment *);
-    void return_to_charger();
+    // void return_to_charger();
     void clean();
     
     
@@ -83,10 +95,12 @@ public:
     Model2(std::string, int, int, int, Environment *);
     Model2(std::string, Environment *);
     bool get_neighbor(int);
-    void return_to_charger();
+    // void return_to_charger();
     void rotate();
     void advance();
     void clean();
+    void charging();
+    std::vector<int> get_neighbors(Environment*, int, int);
     
     
 };

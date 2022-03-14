@@ -15,12 +15,11 @@ int main()
     
     std::cout << "Your Roomba will start cleaning." << std::endl;     
     
-    while (!p_roomba->stop_robot())
-    {   
-        p_roomba->clean();
-        std::cout << room << std::endl;
-        
-    }
+    p_roomba->cleaning_routine();
+
+    // p_roomba = new Model2("robot_info.txt", p_room);
+
+    // p_roomba->a_star(p_roomba->get_environment(), p_roomba->get_x_pos(), p_roomba->get_y_pos());
 
     std::cout << "End of testing. Robot out of battery." << std::endl;
     return 0;
