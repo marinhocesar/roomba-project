@@ -1,6 +1,5 @@
 #include "environment.hpp"
 
-
 /* ============================Auxiliary Functions=========================== */
 
 int *getCoordinates(std::string s, std::string separator = ",")
@@ -184,7 +183,7 @@ void Environment::add_obstacle(std::string filename)
             if (file_info.find("obstacle") != std::string::npos)
             {
                 int *coord = getCoordinates(file_info_number);
-                
+
                 add_obstacle(coord[0], coord[1]);
             }
         }
@@ -275,19 +274,23 @@ int Environment::get_width()
 {
     return width;
 }
+
 int Environment::get_height()
 {
-   return height; 
+    return height;
 }
+
 int Environment::get_charging_x()
 {
     return charging_station_x;
 }
+
 int Environment::get_charging_y()
 {
     return charging_station_y;
 }
-int** Environment::get_grid()
+
+int **Environment::get_grid()
 {
     return grid;
 }
@@ -355,9 +358,8 @@ void customInitialization(Environment *p_room)
         std::cout << "Y coordinate of the charging station: ";
         std::cin >> y_charger;
         *p_room = Environment(width, height, x_charger, y_charger);
-        return;    
+        return;
     }
-
 
     std::cout << "Initialization will occour with default values." << std::endl;
     *p_room = Environment(width, height);
@@ -471,7 +473,7 @@ void obstaclesMenu(Environment *room)
     }
 }
 
-void moveChargingStation(Environment* p_room)
+void moveChargingStation(Environment *p_room)
 {
     int x_charger = 0, y_charger = 0;
     std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
@@ -483,27 +485,27 @@ void moveChargingStation(Environment* p_room)
     p_room->set_charging_station(x_charger, y_charger);
 }
 
-void addSingularObstacle(Environment* p_room)
+void addSingularObstacle(Environment *p_room)
 {
     int x = -1, y = -1;
-            std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
-            std::cout << "Enter the X coordinate: ";
-            std::cin >> x;
-            std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
-            std::cout << "Enter the Y coordinate: ";
-            std::cin >> y;
+    std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
+    std::cout << "Enter the X coordinate: ";
+    std::cin >> x;
+    std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
+    std::cout << "Enter the Y coordinate: ";
+    std::cin >> y;
 
-            if (x < 1 || y < 1)
-            {
-                std::cout << "Invalid arguments." << std::endl;
-                return;
-            }
+    if (x < 1 || y < 1)
+    {
+        std::cout << "Invalid arguments." << std::endl;
+        return;
+    }
 
-            p_room->add_obstacle(x, y);
-            std::cout << *p_room << std::endl;
+    p_room->add_obstacle(x, y);
+    std::cout << *p_room << std::endl;
 }
 
-void addRectOfObstacles(Environment* p_room)
+void addRectOfObstacles(Environment *p_room)
 {
     int x1 = -1, y1 = -1, x2 = -1, y2 = -1;
     std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
@@ -528,7 +530,7 @@ void addRectOfObstacles(Environment* p_room)
     std::cout << *p_room << std::endl;
 }
 
-void addObstaclesFromFile(Environment* p_room)
+void addObstaclesFromFile(Environment *p_room)
 {
     std::string filename = "";
     std::cout << "Enter the filename: ";

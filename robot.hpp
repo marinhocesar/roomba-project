@@ -23,7 +23,7 @@ class Laser
 public:
     Laser();
     Laser(Environment *);
-    bool* calc_collision(int, int);
+    bool *calc_collision(int, int);
 };
 
 class Battery
@@ -54,7 +54,8 @@ public:
     Robot();
     Robot(std::string, int, int, int, Environment *);
     Robot(std::string, Environment *);
-    virtual void clean(){
+    virtual void clean()
+    {
         std::cout << "cleaning" << std::endl;
     }
     void go_to(int, int);
@@ -63,52 +64,49 @@ public:
     void show_battery();
     bool has_charge();
     void update_cell();
-    Environment* get_environment();
+    Environment *get_environment();
     int get_x_pos();
     int get_y_pos();
-    virtual void return_to_charger(){}
-    void a_star(Environment*, int, int);
-    void reconstruct_path(int*, std::map<int,int>, int, int, int);
+    void return_to_charger(Environment *, int, int);
+    void reconstruct_path(int *, std::map<int, int>, int, int, int);
     void cleaning_routine();
-    virtual void charging(){}
-    virtual std::vector<int> get_neighbors(Environment*, int, int){}
+    virtual void charging() {}
+    virtual std::vector<int> get_neighbors(Environment *, int, int) {}
 };
 
 class Model1 : public Robot
 {
     Bumper bumper;
+
 public:
     Model1(std::string, int, int, int, Environment *);
     Model1(std::string, Environment *);
-    // void return_to_charger();
     void clean();
-    
-    
+    std::vector<int> get_neighbors(Environment *, int, int);
+    void charging();
 };
 
 class Model2 : public Robot
 {
-    bool* neighbors;
+    bool *neighbors;
     int angle; // 0=NW; 1=N; 2=NE; 3=W; 4=E; 5=SW; 6=S; 7=SE;
     Laser laser;
+
 public:
     Model2(std::string, int, int, int, Environment *);
     Model2(std::string, Environment *);
     bool get_neighbor(int);
-    // void return_to_charger();
     void rotate();
     void advance();
     void clean();
     void charging();
-    std::vector<int> get_neighbors(Environment*, int, int);
-    
-    
+    std::vector<int> get_neighbors(Environment *, int, int);
 };
 
 /*=======================Roomba Test Functions=========================== */
-void customRobot(Environment*, Robot*&);
-void fileRobot(Environment*, Robot*&); //ainda falta
-void modelRobot(std::string, int, int, int, Environment*, Robot*&);
-void modelRobot(std::string, Environment*, Robot*&);
+void customRobot(Environment *, Robot *&);
+void fileRobot(Environment *, Robot *&); // ainda falta
+void modelRobot(std::string, int, int, int, Environment *, Robot *&);
+void modelRobot(std::string, Environment *, Robot *&);
 
 #endif
