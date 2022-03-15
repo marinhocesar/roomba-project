@@ -7,7 +7,4 @@
 
 O programa principal se encontra no arquivo main.exe
 
-Objetivos a completar:
-- método para voltar à estação para classe Model1;
-
 
