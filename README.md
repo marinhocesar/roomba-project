@@ -7,7 +7,11 @@
 
 O programa principal se encontra no arquivo main.exe
 
-Objetivos a completar:
-- método para voltar à estação para classe Model1;
+São necessários para a compilação de main.exe os seguintes arquivos:
+- main.cpp
+- menus.cpp
+- a_star.cpp
+- environment.cpp
+- robot.cpp
 
 

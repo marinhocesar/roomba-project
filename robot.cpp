@@ -3,45 +3,40 @@
 
 /* =============================Bumper====================================== */
 
-Bumper::Bumper()
-{
-}
-
 Bumper::Bumper(Environment *p_a)
 {
+    // Bumper class constructor.
     current_envo = p_a;
 }
 
 bool Bumper::calc_collision(int x, int y)
 {
+    // Checks if the cell in row y and column x is free of obstacles
 
     if (x < 0 || x >= current_envo->get_width() || y < 0 || y >= current_envo->get_height())
     {
-        // Environment borders
+        // Checks for environment borders.
         std::cout << "Wall detected ";
         return true;
     }
 
     if (current_envo->get_grid()[y][x] == 1)
     {
-        // Obstacle
+        // Checks for obstacles.
         std::cout << "Obstacle detected ";
         return true;
     }
     else
     {
-        // Free path
+        // Detects a free path for the evaluated cell.
         return false;
     }
 }
 /* =============================Laser====================================== */
 
-Laser::Laser()
-{
-}
-
 Laser::Laser(Environment *p_a)
 {
+    // Laser class constructor.
     current_envo = p_a;
 }
 
@@ -76,7 +71,7 @@ bool *Laser::calc_collision(int x, int y)
             bool cond2 = (neigh_y < 0 || neigh_y >= current_envo->get_height());
             if (cond1 || cond2)
             {
-                // Environment borders
+                // Environment borders.
                 neighbors[count] = true;
                 ++count;
                 continue;
@@ -84,17 +79,18 @@ bool *Laser::calc_collision(int x, int y)
 
             if (current_envo->get_grid()[neigh_y][neigh_x] == 1)
             {
-                // Obstacle
+                // Checks for obstacles.
                 neighbors[count] = true;
                 ++count;
                 continue;
             }
 
-            // Free path
+            // Detects a free path.
             neighbors[count] = false;
             ++count;
         }
     }
+    // After checking all surroundind cells, returns an array with 8 elements.
     return neighbors;
 }
 
@@ -102,23 +98,27 @@ bool *Laser::calc_collision(int x, int y)
 
 Battery::Battery()
 {
+    // Battery class constructor for instantiation with no arguments.
     max_battery = 100;
     current_battery = 100;
 }
 
 Battery::Battery(int max_capacity)
 {
+    // Battery class constructor for instantiation with argument for max capacity.
     max_battery = max_capacity;
     current_battery = max_capacity;
 }
 
 void Battery::discharge()
 {
+    // Method for decreasing the current battery levels.
     --current_battery;
 }
 
 void Battery::charge()
 {
+    // Method for increasing the current battery levels.
     ++current_battery;
 }
 
@@ -134,14 +134,9 @@ int Battery::get_max_battery()
 
 /* ======================Robot Class======================================= */
 
-Robot::Robot()
-{
-    //
-}
-
 Robot::Robot(std::string robot_name, int x, int y, int capacity, Environment *p_a)
 {
-    // Constructor with user input
+    // Robot class constructor with user input
     x_pos = x;
     y_pos = y;
     current_envo = p_a;
@@ -152,7 +147,7 @@ Robot::Robot(std::string robot_name, int x, int y, int capacity, Environment *p_
 
 Robot::Robot(std::string filename, Environment *p_a)
 {
-    // Constructor with file info
+    // Robot class constructor with file info
     std::string file_info;
     std::ifstream f(filename); // Opens the file in input mode.
     int capacity = 100;
@@ -195,8 +190,10 @@ Robot::Robot(std::string filename, Environment *p_a)
 
         f.close();
     }
+
     battery = Battery(capacity);
     current_envo = p_a;
+
     bool cond1 = (x_pos < 0 || x_pos > p_a->get_width() - 1);
     bool cond2 = (y_pos < 0 || y_pos > p_a->get_height() - 1);
     if (cond1 || cond2)
@@ -225,7 +222,6 @@ Robot::Robot(std::string filename, Environment *p_a)
 
 bool Robot::stop_robot()
 {
-    // Stops the robot
     if (has_charge())
     {
         return false;
@@ -240,6 +236,7 @@ void Robot::show_battery()
 
 bool Robot::has_charge()
 {
+    // Checks if the battery still has charge.
     if (battery.get_battery_level() < 1)
     {
         return false;
@@ -249,6 +246,10 @@ bool Robot::has_charge()
 
 void Robot::update_cell()
 {
+    /*
+    Changes the grid representation to signify the presence
+    of the roomba after moving    
+    */ 
     battery.discharge();
     show_battery();
     current_envo->set_element(x_pos, y_pos, 3);
@@ -271,15 +272,24 @@ int Robot::get_y_pos()
 
 void Robot::return_to_charger(Environment *envo, int x_start, int y_start)
 {
-    returning = true;
+    // Implementation of A* algorithm to make the return to the charging station
+
+    returning = true; // Flags the return of the roomba.
+
+    std::cout << "\t\t   /\\" << std::endl;
+    std::cout << "\t\t  /  \\" << std::endl;
+    std::cout << "\t\t /  ! \\" << std::endl;
+    std::cout << "\t\t/______\\" << std::endl;
+    std::cout << "====== Warning: Critical Baterry Levels! =====" << std::endl;
     std::cout << "Returning to charging station." << std::endl;
+    
     int cols = envo->get_width();
     int rows = envo->get_height();
 
     int *arr = new int[cols * rows];
-    int *f_score = new int[cols * rows];
-    int *g_score = new int[cols * rows];
-    int *h_score = new int[cols * rows];
+    int *f_score = new int[cols * rows]; // G score + H score.
+    int *g_score = new int[cols * rows]; // Distance from the starting position.
+    int *h_score = new int[cols * rows]; // Distante to the end position.
     std::map<int, int> came_from;
 
     int start_index = get_index(x_start, y_start, cols);
@@ -292,47 +302,71 @@ void Robot::return_to_charger(Environment *envo, int x_start, int y_start)
     {
         for (int i = 0; i < cols; ++i)
         {
+            // Copies the environment into a pseudo multidimensional array 'arr'.
             int index = get_index(i, j, cols);
-            arr[index] = envo->get_grid()[j][i];
+            arr[index] = envo->get_grid()[j][i]; 
+            // Initialize F and G score with maximum value to int type.
             f_score[index] = std::numeric_limits<int>::max();
             g_score[index] = std::numeric_limits<int>::max();
+            // H score is initialized with the distance to each cell to the goal.
             h_score[index] = heuristic(index, end_index, cols);
         }
     }
 
+    // Create a set of cells to be evaluated.
     std::vector<int> open_set;
+    // The starting position is the first cell in open_set.
     open_set.push_back(start_index);
+
     g_score[start_index] = 0;
     f_score[start_index] = h_score[start_index];
 
     while (!open_set.empty())
     {
+        // This loops runs while there are cells to evaluate.
+
+        // Picks the cell in open set that offers the smallest f_score.
         int current_index = smallest_fScore(open_set, f_score);
 
         if (current_index == end_index)
         {
+            // If the current cell is the end destination, the path was found.
             return reconstruct_path(arr, came_from, current_index, rows, cols);
         }
 
-        // Find current in open_set and remove it
-        // Finds the first occurrence of current_index in open_set
+        // Find current in open_set and remove it.
+        // Finds the first occurrence of current_index in open_set.
         std::vector<int>::iterator current_in_open;
         current_in_open = std::find(open_set.begin(), open_set.end(), current_index);
 
         if (current_in_open != open_set.end())
         {
-            open_set.erase(current_in_open); // Deletes the current_index from the open set
+            // If found, deletes the current_index from the open set.
+            open_set.erase(current_in_open);
         }
 
+        // Gets a vector with the index of the free neighboring cells.
         std::vector<int> neighbors = get_neighbors(envo, current_index, cols);
 
         for (std::vector<int>::iterator it = neighbors.begin(); it != neighbors.end(); ++it)
         {
+            // Loops through the free neighboring cells. 
             int neighbor = *it;
-            int tentative_score = g_score[current_index] + heuristic(current_index, neighbor, cols);
+            // Calculate the candidate's G score.
+            int neighbor_dist = heuristic(current_index, neighbor, cols);
+            int tentative_score = g_score[current_index] + neighbor_dist;
+
             if (tentative_score < g_score[neighbor])
             {
+                /*
+                If the path from the current cell to the neighbor offers a
+                smaller G score.
+                */
+
+                // Marks from where it comes to reach the neighbor.
                 came_from[neighbor] = current_index;
+
+                // Registers neighbor f_score and g_score.
                 g_score[neighbor] = tentative_score;
                 f_score[neighbor] = tentative_score + h_score[neighbor];
 
@@ -341,18 +375,23 @@ void Robot::return_to_charger(Environment *envo, int x_start, int y_start)
 
                 if (neighbor_in_open == open_set.end())
                 {
-                    // If the neighbor is not in open_set
+                    // If the neighbor is not already in open_set
                     open_set.push_back(neighbor);
                 }
             }
         }
     }
 
+    // If there's no more cells in open_set and the end was not reached, just return.
     return;
 }
 
 void Robot::reconstruct_path(int *arr, std::map<int, int> came_from, int current_index, int rows, int cols)
 {
+    /*
+    After reaching the final destination, move the robot according to the
+    cells that offer the best path.
+    */
     std::vector<int> total_path;
     total_path.push_back(current_index);
 
@@ -360,16 +399,20 @@ void Robot::reconstruct_path(int *arr, std::map<int, int> came_from, int current
 
     while (came_from.count(current_index))
     {
-        // While current exists as a key in came_from
+        // While current exists as a key in came_from map.
         current_index = came_from[current_index];
         total_path.insert(total_path.begin(), current_index);
     }
 
     for (std::vector<int>::iterator it = total_path.begin(); it != total_path.end(); ++it)
     {
+        // Loops through the total_path.
         int index = *it;
+        // Gets x and y coordinates from the cell's index.
         int x = get_x(index, current_envo->get_width());
         int y = get_y(index, current_envo->get_width());
+        
+        // Move the robot
         if (has_charge())
         {
             go_to(x, y);
@@ -386,6 +429,7 @@ void Robot::reconstruct_path(int *arr, std::map<int, int> came_from, int current
 
 void Robot::go_to(int x, int y)
 {
+    // Moves the Robot to the (x,y) cell.
     reset_cell();
     x_pos = x;
     y_pos = y;
@@ -395,6 +439,10 @@ void Robot::go_to(int x, int y)
 
 void Robot::reset_cell()
 {
+    /*
+    After the robot passes, reset the representation of the environment to
+    its original state. 
+    */
     int charger_x = current_envo->get_charging_x() - 1;
     int charger_y = current_envo->get_charging_y() - 1;
     if (x_pos == charger_x && y_pos == charger_y)
@@ -409,6 +457,7 @@ void Robot::reset_cell()
 
 void Robot::cleaning_routine()
 {
+    // Routine to clean and charge when needed.
     while (!stop_robot())
     {
         clean();
@@ -591,17 +640,6 @@ void Model2::clean()
         rotate();
         advance();
     }
-}
-
-bool Model2::get_neighbor(int index)
-{
-    if (index < 0 || index > 7)
-    {
-        std::cout << "Neighboring cells must be refered with index values";
-        std::cout << " between 0 and 7" << std::endl;
-        return true;
-    }
-    return neighbors[index];
 }
 
 void Model2::rotate()

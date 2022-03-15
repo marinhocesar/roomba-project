@@ -11,7 +11,7 @@ class Bumper
     Environment *current_envo;
 
 public:
-    Bumper();
+    Bumper(){}
     Bumper(Environment *);
     bool calc_collision(int, int);
 };
@@ -21,7 +21,7 @@ class Laser
     Environment *current_envo;
 
 public:
-    Laser();
+    Laser(){}
     Laser(Environment *);
     bool *calc_collision(int, int);
 };
@@ -51,7 +51,7 @@ protected:
     bool returning = false;
 
 public:
-    Robot();
+    Robot(){}
     Robot(std::string, int, int, int, Environment *);
     Robot(std::string, Environment *);
     virtual void clean()
@@ -95,7 +95,6 @@ class Model2 : public Robot
 public:
     Model2(std::string, int, int, int, Environment *);
     Model2(std::string, Environment *);
-    bool get_neighbor(int);
     void rotate();
     void advance();
     void clean();
@@ -105,7 +104,7 @@ public:
 
 /*=======================Roomba Test Functions=========================== */
 void customRobot(Environment *, Robot *&);
-void fileRobot(Environment *, Robot *&); // ainda falta
+void fileRobot(Environment *, Robot *&); 
 void modelRobot(std::string, int, int, int, Environment *, Robot *&);
 void modelRobot(std::string, Environment *, Robot *&);
 
