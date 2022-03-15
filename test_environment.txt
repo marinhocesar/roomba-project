@@ -1,0 +1,20 @@
+width= 8
+height= 8
+charging_station_x= 2
+charging_station_y= 6
+obstacle= 1, 4
+obstacle= 2, 4
+obstacle= 3, 4
+obstacle= 4, 4
+obstacle= 5, 4
+obstacle= 5, 5
+obstacle= 5, 6
+$
+| 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 |
+| 1 1 1 1 1 0 0 0 |
+| 0 0 0 0 1 0 0 0 |
+| 0 4 0 0 1 0 0 0 |
+| 0 0 0 0 0 0 0 0 |
+| 0 0 0 0 0 0 0 0 |

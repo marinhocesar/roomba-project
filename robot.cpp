@@ -248,8 +248,8 @@ void Robot::update_cell()
 {
     /*
     Changes the grid representation to signify the presence
-    of the roomba after moving    
-    */ 
+    of the roomba after moving
+    */
     battery.discharge();
     show_battery();
     current_envo->set_element(x_pos, y_pos, 3);
@@ -282,7 +282,7 @@ void Robot::return_to_charger(Environment *envo, int x_start, int y_start)
     std::cout << "\t\t/______\\" << std::endl;
     std::cout << "====== Warning: Critical Baterry Levels! =====" << std::endl;
     std::cout << "Returning to charging station." << std::endl;
-    
+
     int cols = envo->get_width();
     int rows = envo->get_height();
 
@@ -304,7 +304,7 @@ void Robot::return_to_charger(Environment *envo, int x_start, int y_start)
         {
             // Copies the environment into a pseudo multidimensional array 'arr'.
             int index = get_index(i, j, cols);
-            arr[index] = envo->get_grid()[j][i]; 
+            arr[index] = envo->get_grid()[j][i];
             // Initialize F and G score with maximum value to int type.
             f_score[index] = std::numeric_limits<int>::max();
             g_score[index] = std::numeric_limits<int>::max();
@@ -350,7 +350,7 @@ void Robot::return_to_charger(Environment *envo, int x_start, int y_start)
 
         for (std::vector<int>::iterator it = neighbors.begin(); it != neighbors.end(); ++it)
         {
-            // Loops through the free neighboring cells. 
+            // Loops through the free neighboring cells.
             int neighbor = *it;
             // Calculate the candidate's G score.
             int neighbor_dist = heuristic(current_index, neighbor, cols);
@@ -411,7 +411,7 @@ void Robot::reconstruct_path(int *arr, std::map<int, int> came_from, int current
         // Gets x and y coordinates from the cell's index.
         int x = get_x(index, current_envo->get_width());
         int y = get_y(index, current_envo->get_width());
-        
+
         // Move the robot
         if (has_charge())
         {
@@ -441,7 +441,7 @@ void Robot::reset_cell()
 {
     /*
     After the robot passes, reset the representation of the environment to
-    its original state. 
+    its original state.
     */
     int charger_x = current_envo->get_charging_x() - 1;
     int charger_y = current_envo->get_charging_y() - 1;
@@ -829,9 +829,6 @@ void modelRobot(std::string name, int x, int y, int btr_cp, Environment *p_r, Ro
         return;
     }
 
-    // std::cout << "This option is not yet available!" << std::endl;
-    // return modelRobot(name, x, y, btr_cp, p_r, p_rob);
-
     p_rob = new Model2(name, x, y, btr_cp, p_r);
     return;
 }
@@ -856,9 +853,6 @@ void modelRobot(std::string filename, Environment *p_r, Robot *&p_rob)
         p_rob = new Model1(filename, p_r);
         return;
     }
-
-    // std::cout << "This option is not yet available!" << std::endl;
-    // return modelRobot(filename, p_r, p_rob);
 
     p_rob = new Model2(filename, p_r);
     return;

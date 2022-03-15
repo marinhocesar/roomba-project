@@ -65,7 +65,7 @@ void menu_C(Environment *p_r, Robot *&p_rob)
     std::cout << "1- Add obstacles." << std::endl;
     std::cout << "2- Save Environment to a file." << std::endl;
     std::cout << "3- Show Environment." << std::endl;
-    std::cout << "4- Move charging station." << std::endl;
+    std::cout << "4- Set/Move charging station." << std::endl;
     std::cout << "5- Add robot" << std::endl;
     int answer = -1;
     std::cin >> answer;
