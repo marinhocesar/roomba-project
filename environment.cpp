@@ -152,6 +152,21 @@ void Environment::add_obstacle(int i, int j)
     grid[j - 1][i - 1] = 1;
 }
 
+void Environment::delete_obstacle(int i, int j)
+{
+    // Removes an obstacle to the matrix representation of the Environment instance.
+    if (i == charging_station_x && j == charging_station_y)
+    {
+        return;
+    }
+    if (i < 1 || i > width || j < 1 || j > height)
+    {
+        std::cout << "One or more arguments provided are invalid." << std::endl;
+        return;
+    }
+    grid[j - 1][i - 1] = 0;
+}
+
 void Environment::add_obstacle(int x_start, int y_start, int x_finish, int y_finish)
 {
     // Adds a rectangle to the matrix representation of the Environment instance.
@@ -195,12 +210,13 @@ void Environment::add_obstacle(std::string filename)
 void Environment::set_charging_station(int i, int j)
 {
     // Adds an charging station to the matrix representation of the Environment instance.
+    grid[charging_station_y - 1][charging_station_x - 1] = 0;
     if (i < 1 || i > width || j < 1 || j > height)
     {
         std::cout << "One or more arguments provided are invalid." << std::endl;
+        grid[0][0] = 4;
         return;
     }
-    grid[charging_station_y - 1][charging_station_x - 1] = 0;
     charging_station_x = i;
     charging_station_y = j;
     grid[j - 1][i - 1] = 4;
@@ -542,5 +558,25 @@ void addObstaclesFromFile(Environment *p_room)
         filename = "environment_info.txt";
     }
     p_room->add_obstacle(filename);
+    std::cout << *p_room << std::endl;
+}
+
+void removeObstacles(Environment *p_room)
+{
+    int x = -1, y = -1;
+    std::cout << "Value must be between 1 and " << p_room->get_width() << std::endl;
+    std::cout << "Enter the X coordinate: ";
+    std::cin >> x;
+    std::cout << "Value must be between 1 and " << p_room->get_height() << std::endl;
+    std::cout << "Enter the Y coordinate: ";
+    std::cin >> y;
+
+    if (x < 1 || y < 1)
+    {
+        std::cout << "Invalid arguments." << std::endl;
+        return;
+    }
+
+    p_room->delete_obstacle(x, y);
     std::cout << *p_room << std::endl;
 }

@@ -12,7 +12,6 @@ int heuristic(int, int, int);
 int smallest_fScore(std::vector<int>, int *);
 void reconstruct_path(int *, std::map<int, int>, int, int, int);
 std::vector<int> get_neighbors(Environment *, int, int);
-// void a_star(Environment*, int, int);
 
 /*==================Auxiliary Functions=========================== */
 int get_index(int, int, int);

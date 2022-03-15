@@ -62,7 +62,7 @@ void menu_C(Environment *p_r, Robot *&p_rob)
     std::cout << *p_r << std::endl;
 
     std::cout << "\nEnvironment Management (0 to quit)" << std::endl;
-    std::cout << "1- Add obstacles." << std::endl;
+    std::cout << "1- Add/Remove obstacles." << std::endl;
     std::cout << "2- Save Environment to a file." << std::endl;
     std::cout << "3- Show Environment." << std::endl;
     std::cout << "4- Set/Move charging station." << std::endl;
@@ -108,13 +108,14 @@ void menu_D(Environment *p_r, Robot *&p_rob)
     std::cout << "1- Individual obstacles." << std::endl;
     std::cout << "2- Rectangle of obstacles." << std::endl;
     std::cout << "3- Obstacles from a file." << std::endl;
+    std::cout << "4- Remove obstacle." << std::endl;
     int answer = -1;
     std::cin >> answer;
     if (answer == 0)
     {
         return menu_C(p_r, p_rob);
     }
-    if (answer != 1 && answer != 2 && answer != 3)
+    if (answer != 1 && answer != 2 && answer != 3 && answer != 4)
     {
         std::cout << "Sorry, this is not an option." << std::endl;
         return menu_D(p_r, p_rob);
@@ -130,8 +131,14 @@ void menu_D(Environment *p_r, Robot *&p_rob)
         addRectOfObstacles(p_r);
         return menu_D(p_r, p_rob);
     }
+    else if (answer == 3)
+    {
+        addObstaclesFromFile(p_r);
+        return menu_D(p_r, p_rob);
+        
+    }
 
-    addObstaclesFromFile(p_r);
+    removeObstacles(p_r);
     return menu_D(p_r, p_rob);
 }
 

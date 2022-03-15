@@ -220,13 +220,14 @@ Robot::Robot(std::string filename, Environment *p_a)
 
 /* ===========================Class Methods================================ */
 
-bool Robot::stop_robot()
+void Robot::stop_robot()
 {
-    if (has_charge())
+    if (!has_charge())
     {
-        return false;
+        stopped = true;
     }
-    return true;
+
+    return;
 }
 
 void Robot::show_battery()
@@ -458,7 +459,7 @@ void Robot::reset_cell()
 void Robot::cleaning_routine()
 {
     // Routine to clean and charge when needed.
-    while (!stop_robot())
+    while (!stopped)
     {
         clean();
         std::cout << *current_envo << std::endl;
@@ -485,7 +486,7 @@ Model1::Model1(std::string filename, Environment *p_a) : Robot(filename, p_a)
 
 void Model1::clean()
 {
-    if (!has_charge())
+    if (stopped)
     {
         return;
     }
@@ -609,7 +610,7 @@ Model2::Model2(std::string filename, Environment *p_a) : Robot(filename, p_a)
 
 void Model2::clean()
 {
-    if (!has_charge())
+    if (stopped)
     {
         // Won't clean if has no charge
         return;
@@ -770,20 +771,23 @@ void customRobot(Environment *p_r, Robot *&p_rob)
         robot_name = "generic_robot";
     }
     std::cout << "The coordinates must be integers." << std::endl;
+    std::cout << "(Value between 1 and " << p_r->get_width() << ")" << std::endl;
     std::cout << "Enter the X coordinate for the starting position: ";
     std::cin >> x;
+    std::cout << "(Value between 1 and " << p_r->get_height() << ")" << std::endl;
     std::cout << "Enter the Y coordinate for the starting position: ";
     std::cin >> y;
     std::cout << "Enter battery capactiy: ";
     std::cin >> battery_capacity;
 
     bool cond1 = (x < 1 || y < 1 || x > p_r->get_width() || y > p_r->get_height());
-    bool cond2 = (p_r->get_grid())[y - 1][x - 1] == 1;
     if (cond1)
     {
         std::cout << "Invalid arguments." << std::endl;
         return customRobot(p_r, p_rob);
     }
+
+    bool cond2 = (p_r->get_grid())[y - 1][x - 1] == 1;
     if (cond2)
     {
         std::cout << "The robot's starting position has to be free of obstacles.";

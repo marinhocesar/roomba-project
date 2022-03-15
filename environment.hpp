@@ -18,6 +18,7 @@ public:
     Environment(int, int, int, int);
     Environment(std::string);
     void add_obstacle(int, int);
+    void delete_obstacle(int, int);
     void set_charging_station(int, int);
     void add_obstacle(int, int, int, int);
     void add_obstacle(std::string);
@@ -40,6 +41,7 @@ void saveMenu(Environment*);
 void obstaclesMenu(Environment*);
 void moveChargingStation(Environment*);
 void addSingularObstacle(Environment*);
+void removeObstacles(Environment*);
 void addRectOfObstacles(Environment*);
 void addObstaclesFromFile(Environment*);
 

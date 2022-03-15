@@ -49,18 +49,16 @@ protected:
     int x_pos = 0, y_pos = 0;
     Battery battery;
     bool returning = false;
+    bool stopped = false;
 
 public:
     Robot(){}
     Robot(std::string, int, int, int, Environment *);
     Robot(std::string, Environment *);
-    virtual void clean()
-    {
-        std::cout << "cleaning" << std::endl;
-    }
+    virtual void clean(){}
     void go_to(int, int);
     void reset_cell();
-    bool stop_robot();
+    void stop_robot();
     void show_battery();
     bool has_charge();
     void update_cell();
