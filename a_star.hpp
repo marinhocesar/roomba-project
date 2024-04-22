@@ -4,8 +4,6 @@
 #include "environment.hpp"
 #include <cmath>
 #include <vector>
-#include <limits>
-#include <algorithm>
 #include <map>
 
 int heuristic(int, int, int);

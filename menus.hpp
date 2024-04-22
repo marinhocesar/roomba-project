@@ -2,7 +2,6 @@
 #define MENUS
 
 #include "robot.hpp"
-#include <stdio.h>
 
 void menu_A(Environment *, Robot *&);
 void menu_B(Environment *, Robot *&);

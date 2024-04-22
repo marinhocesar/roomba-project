@@ -1,5 +1,9 @@
 #include "robot.hpp"
 #include "menus.hpp"
+#include "a_star.hpp"
+#include <string>
+#include <fstream>
+#include <algorithm>
 
 /* =============================Bumper====================================== */
 

@@ -2,7 +2,8 @@
 #define ROBOT
 
 #include "environment.hpp"
-#include "a_star.hpp"
+#include <vector>
+#include <map>
 
 /* ==============================Class Prototypes============================ */
 

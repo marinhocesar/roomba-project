@@ -4,3 +4,4 @@ test_environment.cpp
 test_environment.exe
 test_robot.cpp
 test_robot.exe
+*.exe

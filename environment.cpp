@@ -1,4 +1,6 @@
 #include "environment.hpp"
+#include <fstream>
+#include <string>
 
 /* ============================Auxiliary Functions=========================== */
 
@@ -257,10 +259,6 @@ void Environment::save_to_file(std::string filename)
         }
 
         f << "$\n";
-
-        // ASK THE PROFESSOR IF THERE IS A WAY TO USE THE OVERLOADED << OPERATOR
-
-        // f << grid << std::endl;
 
         // Writes the matrix that represents the environment into the file.
         for (int i = 0; i < height; i++)
