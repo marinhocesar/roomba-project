@@ -1,3 +1,4 @@
+#include <limits>
 #include "a_star.hpp"
 
 int get_index(int x, int y, int n_cols)

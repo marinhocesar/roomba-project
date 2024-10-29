@@ -6,7 +6,7 @@ int main()
     Environment *p_room = &room;
     Robot *p_roomba;
 
-    menu_A(p_room, p_roomba);
+    start_menu(p_room, p_roomba);
     std::cout << room << std::endl;
 
     std::cout << "Your Roomba will start cleaning." << std::endl;

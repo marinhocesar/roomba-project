@@ -3,11 +3,11 @@
 
 #include "robot.hpp"
 
-void menu_A(Environment *, Robot *&);
-void menu_B(Environment *, Robot *&);
-void menu_C(Environment *, Robot *&);
-void menu_D(Environment *, Robot *&);
-void menu_E(Environment *, Robot *&);
+void start_menu(Environment *, Robot *&);
+void environment_creation_menu(Environment *, Robot *&);
+void environment_setup_menu(Environment *, Robot *&);
+void obstacles_menu(Environment *, Robot *&);
+void robot_creation_menu(Environment *, Robot *&);
 void menu_cleaning();
 
 #endif

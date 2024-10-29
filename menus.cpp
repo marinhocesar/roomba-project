@@ -14,7 +14,7 @@ void start_menu(Environment *p_r, Robot *&p_rob)
     if (answer != 1 && answer != 2)
     {
         std::cout << "Sorry, this is not an option." << std::endl;
-        return menu_A(p_r, p_rob);
+        return start_menu(p_r, p_rob);
     }
 
     if (answer == 1)
