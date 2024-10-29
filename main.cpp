@@ -2,7 +2,6 @@
 
 int main()
 {
-    // Environment room;
     Environment room = Environment();
     Environment *p_room = &room;
     Robot *p_roomba;
