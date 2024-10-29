@@ -55,7 +55,6 @@ void environment_creation_menu(Environment *p_r, Robot *&p_rob)
 
 void environment_setup_menu(Environment *p_r, Robot *&p_rob)
 {
-    // Menu for when the Environment is created
     std::cout << "Your Environment:" << std::endl;
     std::cout << *p_r << std::endl;
 
@@ -101,7 +100,6 @@ void environment_setup_menu(Environment *p_r, Robot *&p_rob)
 
 void obstacles_menu(Environment *p_r, Robot *&p_rob)
 {
-    // Obstacles menu
     std::cout << "\nObstacle Menu (0 to go back)" << std::endl;
     std::cout << "1- Individual obstacles." << std::endl;
     std::cout << "2- Rectangle of obstacles." << std::endl;
@@ -142,7 +140,6 @@ void obstacles_menu(Environment *p_r, Robot *&p_rob)
 
 void robot_creation_menu(Environment *p_r, Robot *&p_rob)
 {
-    // Menu for robot creation
     std::cout << "\nRobot Creation (0 to go back)" << std::endl;
     std::cout << "1- Create robot with custom parameters." << std::endl;
     std::cout << "2- Create robot from a file." << std::endl;
@@ -170,7 +167,6 @@ void robot_creation_menu(Environment *p_r, Robot *&p_rob)
 
 void menu_cleaning()
 {
-    // Menu for robot creation
     std::cout << "\nThe roomba is fully charged!" << std::endl;
     std::cout << "Would you like to continue cleaning?" << std::endl;
     std::cout << "1- Yes." << std::endl;
